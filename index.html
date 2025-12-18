@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NEURAL ARBITRAGE | LIVE MAINNET</title>
+    <title>NEURAL ARBITRAGE</title>
     <style>
         :root {
             --bg: #020005;
@@ -25,7 +25,6 @@
         .xp-container { width: 80px; height: 6px; background: #222; border-radius: 10px; margin-top: 8px; overflow: hidden; }
         #xp-fill { width: 0%; height: 100%; background: var(--neon-blue); transition: 0.5s; }
 
-        /* МОДАЛКА */
         #profile-modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: var(--widget); border: 2px solid var(--neon-blue); padding: 25px; border-radius: 15px; z-index: 1000; width: 300px; box-shadow: 0 0 100px #000; }
         #profile-modal input { width: 100%; background: #000; border: 1px solid #333; color: #fff; padding: 12px; margin: 10px 0; border-radius: 5px; box-sizing: border-box; }
 
@@ -36,20 +35,20 @@
         .stat-box { flex: 1; background: var(--widget); border: 1px solid #1a1a2e; border-radius: 12px; padding: 15px; text-align: center; }
         .stat-box .val { font-size: 1.6em; font-weight: bold; font-family: monospace; }
 
-        .news-box { grid-column: 1 / -1; background: #050505; border: 1px solid #222; padding: 18px; border-radius: 8px; text-align: center; font-weight: bold; margin-bottom: 5px; min-height: 25px; transition: 0.3s; }
+        .news-box { grid-column: 1 / -1; background: #050505; border: 1px solid #222; padding: 18px; border-radius: 8px; text-align: center; font-weight: bold; margin-bottom: 5px; min-height: 25px; }
 
         .market-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; }
         .card { background: var(--widget); border-radius: 15px; border: 1px solid #1a1a2e; padding: 20px; position: relative; }
         
-        .bot-label { position: absolute; top: 12px; left: 12px; background: var(--neon-blue); color: #000; font-size: 0.6em; padding: 2px 8px; border-radius: 4px; font-weight: bold; display: none; box-shadow: 0 0 10px var(--neon-blue); z-index: 5; }
+        .bot-label { position: absolute; top: 12px; left: 12px; background: var(--neon-blue); color: #000; font-size: 0.6em; padding: 2px 8px; border-radius: 4px; font-weight: bold; display: none; box-shadow: 0 0 10px var(--neon-blue); }
 
-        .chart-box { height: 120px; width: 100%; background: #000; margin: 15px 0; border-radius: 5px; border: 1px solid #111; overflow: hidden; }
+        .chart-box { height: 120px; width: 100%; background: #000; margin: 15px 0; border-radius: 5px; border: 1px solid #111; }
         canvas { width: 100%; height: 100%; }
 
         .trade-row { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
         .qty-ctrl { display: flex; align-items: center; background: #000; border-radius: 5px; border: 1px solid #333; }
         .qty-btn { background: #1a1a2e; color: #fff; padding: 5px 12px; font-weight: bold; cursor: pointer; border: none; }
-        .qty-val { width: 40px; text-align: center; color: var(--neon-blue); font-weight: bold; }
+        .qty-val { width: 50px; text-align: center; color: var(--neon-blue); font-weight: bold; cursor: pointer; }
 
         .btn-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
         button { cursor: pointer; border: none; border-radius: 6px; font-weight: bold; transition: 0.2s; }
@@ -58,15 +57,17 @@
 
         .shop-panel { background: var(--widget); border-radius: 12px; border: 1px solid #1a1a2e; padding: 20px; }
         .shop-item { background: #000; padding: 15px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #222; }
+        
+        .toggle-btn { margin-top: 8px; padding: 6px; width: 100%; font-size: 0.7em; background: #1a1a2e; color: #fff; border: 1px solid var(--neon-blue); border-radius: 4px; cursor: pointer; }
+        .toggle-off { border-color: #444; color: #888; }
 
-        .leaderboard { grid-column: 1 / -1; background: var(--widget); border-radius: 15px; border: 1px solid #1a1a2e; padding: 20px; margin-top: 20px; width: 100%; box-sizing: border-box; }
+        .leaderboard { grid-column: 1 / -1; background: var(--widget); border-radius: 15px; border: 1px solid #1a1a2e; padding: 20px; margin-top: 20px; }
         .leader-table { width: 100%; border-collapse: collapse; }
         .leader-table th { text-align: left; color: #444; padding: 10px; border-bottom: 2px solid #111; }
         .leader-table td { padding: 12px 10px; border-bottom: 1px solid #111; }
         .me-row { background: rgba(0, 210, 255, 0.15); color: var(--neon-blue); }
 
         .audio-ctrl { position: fixed; bottom: 15px; left: 15px; background: var(--widget); padding: 10px 15px; border: 1px solid var(--neon-blue); border-radius: 50px; z-index: 100; }
-        
         @keyframes panic { 0% { box-shadow: 0 0 5px #f00; } 50% { box-shadow: 0 0 35px #f00; background: #200; } 100% { box-shadow: 0 0 5px #f00; } }
         .panic-mode { animation: panic 0.2s infinite; border: 2px solid #f00 !important; }
     </style>
@@ -92,7 +93,7 @@
     <div class="xp-container"><div id="xp-fill"></div></div>
 </div>
 
-<div class="game-title">Neural Arbitrage v1.0</div>
+<div class="game-title">Neural Arbitrage v1.1</div>
 
 <div class="main-layout">
     <div class="stats-panel">
@@ -127,34 +128,23 @@
 </div>
 
 <script>
-    // --- ПЕРЕМЕННЫЕ СОСТОЯНИЯ ---
     let state = {
-        cash: 1000, // СТРОКА 208
-        xp: 0, lvl: 1, nick: "Trader_X",
+        cash: 1000, xp: 0, lvl: 1, nick: "Trader_X",
         avatar: "https://api.dicebear.com/7.x/bottts/svg?seed=Lucky",
         passive: 0, farmLvl: 0, farmCost: 2000,
         assets: [
-            { id: 'btc', name: 'BIT-PULSE', base: 100, price: 100, history: Array(60).fill(100), owned: 0, volt: 0.035, hasBot: false, qty: 1 },
-            { id: 'eth', name: 'NEURO-LINK', base: 45, price: 45, history: Array(60).fill(45), owned: 0, volt: 0.03, hasBot: false, qty: 1 },
-            { id: 'omega', name: 'OMEGA-SHARD', base: 500, price: 500, history: Array(60).fill(500), owned: 0, volt: 0.08, hasBot: false, qty: 1 }
+            { id: 'btc', name: 'BIT-PULSE', base: 100, price: 100, history: Array(60).fill(100), owned: 0, volt: 0.035, hasBot: false, botOn: true, qty: 1 },
+            { id: 'eth', name: 'NEURO-LINK', base: 45, price: 45, history: Array(60).fill(45), owned: 0, volt: 0.03, hasBot: false, botOn: true, qty: 1 },
+            { id: 'omega', name: 'OMEGA-SHARD', base: 500, price: 500, history: Array(60).fill(500), owned: 0, volt: 0.08, hasBot: false, botOn: true, qty: 1 }
         ]
     };
 
     const botsPrices = { btc: 5000, eth: 10000, omega: 50000 };
     let globalMods = { btc: 1, eth: 1, omega: 1 };
 
-    // --- НОВОСТИ С ЛИЧНОСТЯМИ ---
-    const vipNews = [
-        { t: "ИЛОН МАСК: 'КРИПТА - ЭТО БУДУЩЕЕ!' (BTC PUMP x5)", m: 5, target: 'btc', c: 'var(--neon-green)' },
-        { t: "ВИТАЛИК БУТЕРИН ОБНОВИЛ NEURO-LINK (ETH PUMP x3)", m: 3, target: 'eth', c: 'var(--neon-green)' },
-        { t: "ФРС ПОВЫШАЕТ СТАВКУ: РЫНОК В ПАНИКЕ (DUMP x0.2)", m: 0.2, target: 'all', c: 'var(--neon-red)' },
-        { t: "OMEGA-SHARD ВЗЛОМАН ХАКЕРАМИ! (CRASH x0.1)", m: 0.1, target: 'omega', c: 'var(--neon-red)' },
-        { t: "ЧАНПЭН ЧЖАО ЗАПУСКАЕТ НОВЫЙ ФОНД (RECOVERY x4)", m: 4, target: 'all', c: 'var(--neon-blue)' }
-    ];
-
-    function save() { localStorage.setItem('na_pro_save', JSON.stringify(state)); }
+    function save() { localStorage.setItem('na_v1.1_save', JSON.stringify(state)); }
     function load() {
-        const data = localStorage.getItem('na_pro_save');
+        const data = localStorage.getItem('na_v1.1_save');
         if (data) {
             state = {...state, ...JSON.parse(data)};
             document.getElementById('user-nick').innerText = state.nick;
@@ -174,36 +164,32 @@
     }
 
     function rollNews() {
+        const vipNews = [
+            { t: "ИЛОН МАСК: 'КРИПТА - ЭТО БУДУЩЕЕ!' (BTC PUMP x5)", m: 5, target: 'btc', c: 'var(--neon-green)' },
+            { t: "ВИТАЛИК БУТЕРИН ОБНОВИЛ NEURO-LINK (ETH PUMP x3)", m: 3, target: 'eth', c: 'var(--neon-green)' },
+            { t: "ФРС ПОВЫШАЕТ СТАВКУ: РЫНОК В ПАНИКЕ (DUMP x0.2)", m: 0.2, target: 'all', c: 'var(--neon-red)' },
+            { t: "OMEGA-SHARD ВЗЛОМАН! (CRASH x0.1)", m: 0.1, target: 'omega', c: 'var(--neon-red)' }
+        ];
         const n = vipNews[Math.floor(Math.random()*vipNews.length)];
         const el = document.getElementById('news-line');
         el.innerText = `>>> ${n.t}`; el.style.color = n.c;
-        if(n.target === 'all') {
-            Object.keys(globalMods).forEach(k => globalMods[k] = n.m);
-        } else {
-            globalMods[n.target] = n.m;
-        }
-        setTimeout(() => { 
-            Object.keys(globalMods).forEach(k => globalMods[k] = 1); 
-            el.style.color = '#888';
-        }, 12000);
+        if(n.target === 'all') Object.keys(globalMods).forEach(k => globalMods[k] = n.m);
+        else globalMods[n.target] = n.m;
+        setTimeout(() => { Object.keys(globalMods).forEach(k => globalMods[k] = 1); el.style.color = '#888'; }, 12000);
     }
 
     function tick() {
         state.assets.forEach(a => {
             let change = (Math.random() - 0.46) * 2 * a.volt;
             if (a.price < a.base * 0.5) change = Math.abs(change) + 0.04;
-            if (Math.random() < 0.01) change = 1.5; // Случайный прострел
-
             const card = document.getElementById(`card-${a.id}`);
             if (a.price > (a.base * 20)) {
                 card.classList.add('panic-mode');
                 if (Math.random() < 0.3) { a.price /= 150; card.classList.remove('panic-mode'); }
             } else { card.classList.remove('panic-mode'); }
-
             let move = (change + 0.001) * globalMods[a.id];
             a.price *= (1 + move); a.price = Math.max(0.01, a.price);
             a.history.push(a.price); a.history.shift();
-
             document.getElementById(`p-${a.id}`).innerText = a.price.toFixed(2);
             document.getElementById(`p-${a.id}`).style.color = move >= 0 ? 'var(--neon-green)' : 'var(--neon-red)';
             drawChart(a);
@@ -228,14 +214,14 @@
     function renderMarket() {
         document.getElementById('market').innerHTML = state.assets.map(a => `
             <div class="card" id="card-${a.id}">
-                <div class="bot-label" id="bot-tag-${a.id}" style="${a.hasBot ? 'display:block' : ''}">BOT ACTIVE</div>
-                <div style="display:flex; justify-content:space-between"><b>${a.name}</b><span id="p-${a.id}" style="font-family:monospace">0</span></div>
+                <div class="bot-label" id="bot-tag-${a.id}" style="${(a.hasBot && a.botOn) ? 'display:block' : 'none'}">BOT ACTIVE</div>
+                <div style="display:flex; justify-content:space-between"><b>${a.name}</b><span id="p-${a.id}">0</span></div>
                 <div class="chart-box"><canvas id="c-${a.id}"></canvas></div>
                 <div class="trade-row">
                     <small>В наличии: <span id="h-${a.id}">${a.owned}</span></small>
                     <div class="qty-ctrl">
                         <button class="qty-btn" onclick="changeQty('${a.id}', -1)">-</button>
-                        <div class="qty-val" id="q-${a.id}">${a.qty}</div>
+                        <div class="qty-val" id="q-${a.id}" onclick="manualQty('${a.id}')">${a.qty}</div>
                         <button class="qty-btn" onclick="changeQty('${a.id}', 1)">+</button>
                     </div>
                 </div>
@@ -245,6 +231,14 @@
                 </div>
             </div>
         `).join('');
+    }
+
+    function manualQty(id) {
+        let val = prompt("Введите количество:", state.assets.find(x => x.id === id).qty);
+        if(val && !isNaN(val) && val > 0) {
+            state.assets.find(x => x.id === id).qty = Math.floor(val);
+            document.getElementById(`q-${id}`).innerText = Math.floor(val);
+        }
     }
 
     function changeQty(id, delta) {
@@ -259,12 +253,11 @@
         if (mode === 'buy' && state.cash >= total) { state.cash -= total; a.owned += a.qty; addXP(10 * a.qty); } 
         else if (mode === 'sell' && a.owned >= a.qty) { state.cash += total; a.owned -= a.qty; addXP(8 * a.qty); }
         document.getElementById(`h-${id}`).innerText = a.owned;
-        updateStats();
     }
 
     function botLogic() {
         state.assets.forEach(a => {
-            if(a.hasBot) {
+            if(a.hasBot && a.botOn) {
                 let avg = a.history.reduce((s,v)=>s+v,0)/60;
                 if(a.price < avg * 0.92 && state.cash >= a.price) { state.cash -= a.price; a.owned++; }
                 if(a.price > avg * 1.08 && a.owned > 0) { state.cash += a.price; a.owned--; }
@@ -273,25 +266,31 @@
         });
     }
 
+    function buyBot(id) {
+        const a = state.assets.find(x => x.id === id);
+        if (state.cash >= botsPrices[id]) {
+            state.cash -= botsPrices[id]; a.hasBot = true; a.botOn = true;
+            renderBotShop(); document.getElementById(`bot-tag-${id}`).style.display = 'block';
+        }
+    }
+
+    function toggleBot(id) {
+        const a = state.assets.find(x => x.id === id);
+        a.botOn = !a.botOn;
+        renderBotShop();
+        document.getElementById(`bot-tag-${id}`).style.display = a.botOn ? 'block' : 'none';
+    }
+
     function renderBotShop() {
         document.getElementById('bot-shop-area').innerHTML = state.assets.map(a => `
             <div class="shop-item">
                 <b style="color:var(--neon-green)">БОТ: ${a.name}</b><br>
-                <button class="btn-buy" style="width:100%; margin-top:10px; background:var(--neon-pink); color:#fff" 
-                    onclick="buyBot('${a.id}')" ${a.hasBot ? 'disabled' : ''}>
-                    ${a.hasBot ? 'АКТИВИРОВАН' : 'КУПИТЬ: $' + botsPrices[a.id]}
-                </button>
+                ${!a.hasBot ? 
+                    `<button class="btn-buy" style="width:100%; margin-top:10px;" onclick="buyBot('${a.id}')">КУПИТЬ: $${botsPrices[a.id]}</button>` :
+                    `<button class="toggle-btn ${!a.botOn ? 'toggle-off' : ''}" onclick="toggleBot('${a.id}')">${a.botOn ? 'ВЫКЛЮЧИТЬ БОТА' : 'ВКЛЮЧИТЬ БОТА'}</button>`
+                }
             </div>
         `).join('');
-    }
-
-    function buyBot(id) {
-        const a = state.assets.find(x => x.id === id);
-        if (state.cash >= botsPrices[id] && !a.hasBot) {
-            state.cash -= botsPrices[id]; a.hasBot = true;
-            document.getElementById(`bot-tag-${id}`).style.display = 'block';
-            renderBotShop(); addXP(1000);
-        }
     }
 
     function buyFarm() {
@@ -324,11 +323,7 @@
             { n: "CryptoWhale", b: 1200000 },
             { n: state.nick + " (ВЫ)", b: state.cash + state.assets.reduce((s, a) => s + (a.owned * a.price), 0), me: true }
         ].sort((a,b) => b.b - a.b);
-
-        document.getElementById('leader-list').innerHTML = `
-            <tr><th>#</th><th>ИГРОК</th><th>NET WORTH</th></tr>
-            ${players.map((p, i) => `<tr class="${p.me ? 'me-row' : ''}"><td>${i+1}</td><td>${p.n}</td><td>$${Math.floor(p.b).toLocaleString()}</td></tr>`).join('')}
-        `;
+        document.getElementById('leader-list').innerHTML = `<tr><th>#</th><th>ИГРОК</th><th>NET WORTH</th></tr>${players.map((p, i) => `<tr class="${p.me ? 'me-row' : ''}"><td>${i+1}</td><td>${p.n}</td><td>$${Math.floor(p.b).toLocaleString()}</td></tr>`).join('')}`;
     }
 
     function openProfile() { document.getElementById('profile-modal').style.display = 'block'; }
@@ -349,4 +344,4 @@
     window.onload = init;
 </script>
 </body>
-      </html>
+    </html>
