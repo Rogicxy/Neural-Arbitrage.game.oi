@@ -40,7 +40,7 @@
         .market-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; }
         .card { background: var(--widget); border-radius: 15px; border: 1px solid #1a1a2e; padding: 20px; position: relative; }
         
-        .bot-label { position: absolute; top: 12px; left: 12px; background: var(--neon-blue); color: #000; font-size: 0.6em; padding: 2px 8px; border-radius: 4px; font-weight: bold; display: none; box-shadow: 0 0 10px var(--neon-blue); }
+        .bot-label { position: absolute; top: 12px; left: 12px; background: var(--neon-blue); color: #000; font-size: 0.6em; padding: 2px 8px; border-radius: 4px; font-weight: bold; display: none; box-shadow: 0 0 100px var(--neon-blue); }
 
         .chart-box { height: 120px; width: 100%; background: #000; margin: 15px 0; border-radius: 5px; border: 1px solid #111; }
         canvas { width: 100%; height: 100%; }
@@ -68,6 +68,11 @@
         .me-row { background: rgba(0, 210, 255, 0.15); color: var(--neon-blue); }
 
         .audio-ctrl { position: fixed; bottom: 15px; left: 15px; background: var(--widget); padding: 10px 15px; border: 1px solid var(--neon-blue); border-radius: 50px; z-index: 100; }
+        @keyframes panic { 0% { box-shadow: 0 0 5px #f00; } 50% { box-shadow: 0 0 35px #f00; background: #200; } 100% { box-shadow: 0 0 5px #f00; } }
+        .panic-mode { animation: panic 0.2s infinite; border: 2px solid #f00 !important; }
+        
+        /* ОНЛАЙН СТАТУС */
+        .online-counter { font-size: 0.65em; color: #333; margin: 30px 0 10px 0; letter-spacing: 1px; }
     </style>
 </head>
 <body>
@@ -124,8 +129,10 @@
     </div>
 </div>
 
+<div class="online-counter" id="online-count">USERS ONLINE: 1,402</div>
+
 <script>
-    const SAVE_KEY = 'neural_arbitrage_v1_main'; // ЕДИНЫЙ КЛЮЧ
+    const SAVE_KEY = 'neural_arbitrage_v1_main'; 
     
     let state = {
         cash: 1000, xp: 0, lvl: 1, nick: "Trader_X",
@@ -144,10 +151,8 @@
     function save() { localStorage.setItem(SAVE_KEY, JSON.stringify(state)); }
     
     function load() {
-        // ПОПЫТКА ВОССТАНОВИТЬ ИЗ СТАРЫХ ВЕРСИЙ ПРИ ОБНУЛЕНИИ
         const oldData = localStorage.getItem('na_v1.1_save') || localStorage.getItem('na_pro_save');
         const currentData = localStorage.getItem(SAVE_KEY);
-        
         const data = currentData || oldData;
         if (data) {
             state = {...state, ...JSON.parse(data)};
@@ -165,6 +170,12 @@
         setInterval(() => { state.cash += state.passive; addXP(0.5); updateStats(); }, 1000);
         setInterval(botLogic, 1500);
         setInterval(save, 5000);
+        setInterval(updateOnline, 4000);
+    }
+
+    function updateOnline() {
+        const base = 1380 + Math.floor(Math.random() * 50);
+        document.getElementById('online-count').innerText = `USERS ONLINE: ${base.toLocaleString()}`;
     }
 
     function rollNews() {
@@ -184,6 +195,11 @@
     function tick() {
         state.assets.forEach(a => {
             let change = (Math.random() - 0.46) * 2 * a.volt;
+            const card = document.getElementById(`card-${a.id}`);
+            if (a.price > (a.base * 25)) {
+                card.classList.add('panic-mode');
+                if (Math.random() < 0.3) { a.price /= 40; card.classList.remove('panic-mode'); }
+            } else { card.classList.remove('panic-mode'); }
             let move = (change + 0.001) * globalMods[a.id];
             a.price *= (1 + move); a.price = Math.max(0.01, a.price);
             a.history.push(a.price); a.history.shift();
@@ -340,4 +356,4 @@
     window.onload = init;
 </script>
 </body>
-</html>
+        </html>
