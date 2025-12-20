@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NEURAL ARBITRAGE</title>
+    <title>NEURAL ARBITRAGE ULTIMATE</title>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
     <style>
         :root {
             --bg: #020005;
@@ -15,9 +17,9 @@
             --neon-gold: #ffcc00;
         }
 
-        body { font-family: 'Segoe UI', sans-serif; background-color: var(--bg); color: #fff; margin: 0; padding: 10px; display: flex; flex-direction: column; align-items: center; }
+        body { font-family: 'Segoe UI', sans-serif; background-color: var(--bg); color: #fff; margin: 0; padding: 10px; display: flex; flex-direction: column; align-items: center; overflow-x: hidden; }
         
-        /* ПРОФИЛЬ */
+        /* ШАПКА И ПРОФИЛЬ */
         .profile-corner { position: fixed; top: 15px; right: 15px; display: flex; flex-direction: column; align-items: center; z-index: 100; cursor: pointer; background: rgba(8,8,18,0.95); padding: 12px; border-radius: 15px; border: 1px solid var(--neon-blue); box-shadow: 0 0 15px rgba(0,210,255,0.2); }
         .avatar { width: 55px; height: 55px; background-size: cover; background-position: center; border-radius: 50%; border: 2px solid var(--neon-blue); }
         .nickname { font-size: 0.8em; color: var(--neon-blue); margin-top: 5px; font-weight: bold; }
@@ -25,54 +27,53 @@
         .xp-container { width: 80px; height: 6px; background: #222; border-radius: 10px; margin-top: 8px; overflow: hidden; }
         #xp-fill { width: 0%; height: 100%; background: var(--neon-blue); transition: 0.5s; }
 
-        #profile-modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: var(--widget); border: 2px solid var(--neon-blue); padding: 25px; border-radius: 15px; z-index: 1000; width: 300px; box-shadow: 0 0 100px #000; }
-        #profile-modal input { width: 100%; background: #000; border: 1px solid #333; color: #fff; padding: 12px; margin: 10px 0; border-radius: 5px; box-sizing: border-box; }
-
         .game-title { font-size: 2em; letter-spacing: 6px; color: var(--neon-blue); text-shadow: 0 0 15px var(--neon-blue); margin: 20px 0; text-transform: uppercase; }
+        
         .main-layout { display: grid; grid-template-columns: 1fr 320px; gap: 20px; width: 100%; max-width: 1200px; }
+
+        /* ИГРОВЫЕ ПАНЕЛИ */
+        .stat-box { background: var(--widget); border: 1px solid #1a1a2e; border-radius: 12px; padding: 15px; text-align: center; flex: 1; }
+        .val { font-size: 1.6em; font-weight: bold; font-family: monospace; }
         
-        .stats-panel { display: flex; gap: 10px; grid-column: 1 / -1; }
-        .stat-box { flex: 1; background: var(--widget); border: 1px solid #1a1a2e; border-radius: 12px; padding: 15px; text-align: center; }
-        .stat-box .val { font-size: 1.6em; font-weight: bold; font-family: monospace; }
+        .news-box { grid-column: 1 / -1; background: #050505; border: 1px solid #222; padding: 15px; border-radius: 8px; text-align: center; font-weight: bold; color: #888; }
 
-        .news-box { grid-column: 1 / -1; background: #050505; border: 1px solid #222; padding: 18px; border-radius: 8px; text-align: center; font-weight: bold; margin-bottom: 5px; min-height: 25px; }
-
-        .market-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; }
-        .card { background: var(--widget); border-radius: 15px; border: 1px solid #1a1a2e; padding: 20px; position: relative; }
+        .market-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+        .card { background: var(--widget); border-radius: 15px; border: 1px solid #1a1a2e; padding: 20px; position: relative; transition: 0.3s; }
         
-        .bot-label { position: absolute; top: 12px; left: 12px; background: var(--neon-blue); color: #000; font-size: 0.6em; padding: 2px 8px; border-radius: 4px; font-weight: bold; display: none; box-shadow: 0 0 100px var(--neon-blue); }
-
-        .chart-box { height: 120px; width: 100%; background: #000; margin: 15px 0; border-radius: 5px; border: 1px solid #111; }
+        .chart-box { height: 100px; background: #000; margin: 10px 0; border-radius: 5px; }
         canvas { width: 100%; height: 100%; }
 
-        .trade-row { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
-        .qty-ctrl { display: flex; align-items: center; background: #000; border-radius: 5px; border: 1px solid #333; }
-        .qty-btn { background: #1a1a2e; color: #fff; padding: 5px 12px; font-weight: bold; cursor: pointer; border: none; }
-        .qty-val { width: 50px; text-align: center; color: var(--neon-blue); font-weight: bold; cursor: pointer; }
-
-        .btn-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
-        button { cursor: pointer; border: none; border-radius: 6px; font-weight: bold; transition: 0.2s; }
-        .btn-buy { background: var(--neon-green); color: #000; padding: 12px; }
-        .btn-sell { background: var(--neon-red); color: #fff; padding: 12px; }
-
+        /* МАГАЗИН И ТРОФЕИ */
         .shop-panel { background: var(--widget); border-radius: 12px; border: 1px solid #1a1a2e; padding: 20px; }
-        .shop-item { background: #000; padding: 15px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #222; }
-        
-        .toggle-btn { margin-top: 8px; padding: 6px; width: 100%; font-size: 0.7em; background: #1a1a2e; color: #fff; border: 1px solid var(--neon-blue); border-radius: 4px; cursor: pointer; }
-        .toggle-off { border-color: #444; color: #888; }
+        .shop-item { background: #000; padding: 12px; border-radius: 8px; margin-bottom: 12px; border: 1px solid #222; }
+        .trophy-case { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; margin-top: 10px; }
+        .trophy { width: 40px; height: 40px; background: #111; border: 1px solid #333; border-radius: 5px; display: flex; align-items: center; justify-content: center; font-size: 1.2em; filter: grayscale(1); opacity: 0.3; }
+        .trophy.unlocked { filter: grayscale(0); opacity: 1; border-color: var(--neon-gold); box-shadow: 0 0 10px rgba(255,204,0,0.3); }
 
-        .leaderboard { grid-column: 1 / -1; background: var(--widget); border-radius: 15px; border: 1px solid #1a1a2e; padding: 20px; margin-top: 20px; }
-        .leader-table { width: 100%; border-collapse: collapse; }
-        .leader-table th { text-align: left; color: #444; padding: 10px; border-bottom: 2px solid #111; }
-        .leader-table td { padding: 12px 10px; border-bottom: 1px solid #111; }
-        .me-row { background: rgba(0, 210, 255, 0.15); color: var(--neon-blue); }
+        /* ЧАТ */
+        .chat-box { background: #050505; border: 1px solid #1a1a2e; border-radius: 12px; height: 300px; display: flex; flex-direction: column; margin-top: 20px; }
+        #chat-messages { flex: 1; overflow-y: auto; padding: 10px; font-size: 0.85em; }
+        .chat-input-area { display: flex; border-top: 1px solid #222; }
+        #chat-input { flex: 1; background: transparent; border: none; color: #fff; padding: 10px; outline: none; }
+        .chat-send { background: var(--neon-blue); color: #000; border: none; padding: 0 15px; cursor: pointer; font-weight: bold; }
+        .msg { margin-bottom: 5px; border-left: 2px solid var(--neon-blue); padding-left: 8px; }
+        .msg b { color: var(--neon-pink); }
 
-        .audio-ctrl { position: fixed; bottom: 15px; left: 15px; background: var(--widget); padding: 10px 15px; border: 1px solid var(--neon-blue); border-radius: 50px; z-index: 100; }
-        @keyframes panic { 0% { box-shadow: 0 0 5px #f00; } 50% { box-shadow: 0 0 35px #f00; background: #200; } 100% { box-shadow: 0 0 5px #f00; } }
+        /* КНОПКИ */
+        button { cursor: pointer; border: none; border-radius: 6px; font-weight: bold; transition: 0.2s; }
+        .btn-buy { background: var(--neon-green); color: #000; padding: 10px; }
+        .btn-sell { background: var(--neon-red); color: #fff; padding: 10px; }
+
         .panic-mode { animation: panic 0.2s infinite; border: 2px solid #f00 !important; }
-        
-        /* ОНЛАЙН СТАТУС */
-        .online-counter { font-size: 0.65em; color: #333; margin: 30px 0 10px 0; letter-spacing: 1px; }
+        @keyframes panic { 0%, 100% { background: var(--widget); } 50% { background: #200; } }
+
+        .leaderboard { grid-column: 1 / -1; background: var(--widget); border: 1px solid #1a1a2e; border-radius: 15px; padding: 20px; }
+        .leader-table { width: 100%; border-collapse: collapse; }
+        .leader-table td, .leader-table th { padding: 12px; text-align: left; border-bottom: 1px solid #111; }
+        .me-row { background: rgba(0, 210, 255, 0.1); color: var(--neon-blue); }
+
+        #profile-modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: var(--widget); border: 2px solid var(--neon-blue); padding: 25px; border-radius: 15px; z-index: 1000; width: 300px; box-shadow: 0 0 100px #000; }
+        #profile-modal input { width: 100%; background: #000; border: 1px solid #333; color: #fff; padding: 12px; margin: 10px 0; border-radius: 5px; box-sizing: border-box; }
     </style>
 </head>
 <body>
@@ -84,161 +85,218 @@
     <button class="btn-buy" style="width:100%" onclick="saveProfile()">СОХРАНИТЬ</button>
 </div>
 
-<div class="audio-ctrl">
-    <audio id="bg-music" loop><source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-15.mp3" type="audio/mpeg"></audio>
-    <button onclick="toggleMusic()" id="m-btn" style="background:var(--neon-blue); color:#000; border:none; border-radius:20px; font-size:0.7em; padding: 6px 14px; font-weight:bold;">MUSIC: OFF</button>
-</div>
-
 <div class="profile-corner" onclick="openProfile()">
-    <div class="avatar" id="user-avatar" style="background-image: url('https://api.dicebear.com/7.x/bottts/svg?seed=Lucky')"></div>
-    <div class="nickname" id="user-nick">TRADER_X</div>
+    <div class="avatar" id="user-avatar"></div>
+    <div class="nickname" id="user-nick">...</div>
     <div class="lvl-badge" id="lvl-display">LVL 1</div>
     <div class="xp-container"><div id="xp-fill"></div></div>
 </div>
 
-<div class="game-title">Neural Arbitrage v1.2</div>
+<div class="game-title">Neural Arbitrage v1.5</div>
 
 <div class="main-layout">
-    <div class="stats-panel">
-        <div class="stat-box">
-            <div style="font-size: 0.7em; color: #666; margin-bottom: 5px;">БАЛАНС</div>
-            <div class="val" id="balance" style="color: var(--neon-green)">1000.00</div>
-        </div>
-        <div class="stat-box">
-            <div style="font-size: 0.7em; color: #666; margin-bottom: 5px;">ПОРТФЕЛЬ</div>
-            <div class="val" id="asset-value" style="color: var(--neon-pink)">0.00</div>
-        </div>
+    <div class="stat-box">
+        <div style="font-size: 0.7em; color: #666;">БАЛАНС</div>
+        <div class="val" id="balance" style="color: var(--neon-green)">1000.00</div>
+    </div>
+    <div class="stat-box">
+        <div style="font-size: 0.7em; color: #666;">ПОРТФЕЛЬ</div>
+        <div class="val" id="asset-value" style="color: var(--neon-pink)">0.00</div>
     </div>
 
-    <div class="news-box" id="news-line">>>> СИСТЕМА ОБНОВЛЕНА...</div>
+    <div class="news-box" id="news-line">>>> СИСТЕМА ИНИЦИАЛИЗИРОВАНА...</div>
+
     <div class="market-grid" id="market"></div>
 
-    <aside class="shop-panel">
-        <h3 style="color:var(--neon-pink); margin-top:0;">МАГАЗИН</h3>
-        <div class="shop-item">
-            <b style="color:var(--neon-gold)">ASIC МАЙНЕР</b><br>
-            <small id="farm-info">Доход: $0/сек</small>
-            <button class="btn-buy" style="width:100%; margin-top:10px;" onclick="buyFarm()">КУПИТЬ: <span id="farm-cost">2000</span></button>
+    <aside>
+        <div class="shop-panel">
+            <h3 style="color:var(--neon-gold); margin:0 0 15px 0;">МАГАЗИН</h3>
+            <div class="shop-item">
+                <b>ASIC МАЙНЕР</b><br>
+                <small id="farm-info">Доход: $0/сек</small>
+                <button class="btn-buy" style="width:100%; margin-top:8px;" onclick="buyFarm()">КУПИТЬ: <span id="farm-cost">2000</span></button>
+            </div>
+            <div id="bot-shop-area"></div>
+            
+            <h4 style="color:var(--neon-pink); margin:20px 0 10px 0;">ТРОФЕИ</h4>
+            <div class="trophy-case" id="trophy-case">
+                <div class="trophy" title="Первый миллион">🏆</div>
+                <div class="trophy" title="Магнат">💎</div>
+                <div class="trophy" title="Крипто-король">👑</div>
+                <div class="trophy" title="Бог арбитража">🌌</div>
+            </div>
         </div>
-        <div id="bot-shop-area"></div>
+
+        <div class="chat-box">
+            <div id="chat-messages"></div>
+            <div class="chat-input-area">
+                <input type="text" id="chat-input" placeholder="Сообщение...">
+                <button class="chat-send" onclick="sendChat()">></button>
+            </div>
+        </div>
     </aside>
 
     <div class="leaderboard">
-        <h3 style="margin:0 0 15px 0; color:var(--neon-gold);">РЕЙТИНГ</h3>
+        <h3 style="color:var(--neon-gold); margin:0 0 15px 0;">МИРОВОЙ РЕЙТИНГ (LIVE)</h3>
         <table class="leader-table" id="leader-list"></table>
     </div>
 </div>
 
-<div class="online-counter" id="online-count">USERS ONLINE: 1,402</div>
+<div class="online-counter" id="online-count" style="margin: 20px; color: var(--neon-blue); font-size: 0.8em;">USERS ONLINE: ...</div>
 
 <script>
-    const SAVE_KEY = 'neural_arbitrage_v1_main'; 
-    
-    let state = {
-        cash: 1000, xp: 0, lvl: 1, nick: "Trader_X",
-        avatar: "https://api.dicebear.com/7.x/bottts/svg?seed=Lucky",
-        passive: 0, farmLvl: 0, farmCost: 2000,
-        assets: [
-            { id: 'btc', name: 'BIT-PULSE', base: 100, price: 100, history: Array(60).fill(100), owned: 0, volt: 0.035, hasBot: false, botOn: true, qty: 1 },
-            { id: 'eth', name: 'NEURO-LINK', base: 45, price: 45, history: Array(60).fill(45), owned: 0, volt: 0.03, hasBot: false, botOn: true, qty: 1 },
-            { id: 'omega', name: 'OMEGA-SHARD', base: 500, price: 500, history: Array(60).fill(500), owned: 0, volt: 0.08, hasBot: false, botOn: true, qty: 1 }
-        ]
+    const firebaseConfig = {
+      apiKey: "AIzaSyDyT4I-FHNm1UWV0IblzxBj7Gog9HpLCyY",
+      authDomain: "neuralarbitrage.firebaseapp.com",
+      databaseURL: "https://neuralarbitrage-default-rtdb.firebaseio.com",
+      projectId: "neuralarbitrage",
+      storageBucket: "neuralarbitrage.firebasestorage.app",
+      messagingSenderId: "723001384962",
+      appId: "1:723001384962:web:d1773bc000a141fc3c871b"
     };
 
-    const botsPrices = { btc: 5000, eth: 10000, omega: 50000 };
-    let globalMods = { btc: 1, eth: 1, omega: 1 };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+    const SAVE_KEY = 'na_ultimate_save';
+    let userId = localStorage.getItem('na_uid') || 'u' + Math.random().toString(36).substr(2, 5);
+    localStorage.setItem('na_uid', userId);
 
-    function save() { localStorage.setItem(SAVE_KEY, JSON.stringify(state)); }
-    
+    let state = {
+        cash: 1000, xp: 0, lvl: 1, nick: "Trader_" + userId,
+        avatar: "https://api.dicebear.com/7.x/bottts/svg?seed=" + userId,
+        passive: 0, farmCost: 2000,
+        assets: [
+            { id: 'btc', name: 'BIT-PULSE', base: 100, price: 100, history: Array(40).fill(100), owned: 0, volt: 0.04, hasBot: false, botOn: true },
+            { id: 'eth', name: 'NEURO-LINK', base: 45, price: 45, history: Array(40).fill(45), owned: 0, volt: 0.03, hasBot: false, botOn: true },
+            { id: 'omega', name: 'OMEGA-SHARD', base: 500, price: 500, history: Array(40).fill(500), owned: 0, volt: 0.07, hasBot: false, botOn: true }
+        ],
+        trophies: [false, false, false, false]
+    };
+
+    function save() {
+        localStorage.setItem(SAVE_KEY, JSON.stringify(state));
+        db.ref('leaderboard/' + userId).set({
+            nick: state.nick,
+            val: Math.floor(state.cash + state.assets.reduce((s,a)=>s+(a.owned*a.price),0)),
+            lvl: state.lvl
+        });
+    }
+
     function load() {
-        const oldData = localStorage.getItem('na_v1.1_save') || localStorage.getItem('na_pro_save');
-        const currentData = localStorage.getItem(SAVE_KEY);
-        const data = currentData || oldData;
-        if (data) {
-            state = {...state, ...JSON.parse(data)};
-            document.getElementById('user-nick').innerText = state.nick;
-            document.getElementById('user-avatar').style.backgroundImage = `url('${state.avatar}')`;
-            document.getElementById('farm-info').innerText = `Доход: $${Math.floor(state.passive)}/сек`;
-            document.getElementById('farm-cost').innerText = state.farmCost;
-        }
+        const d = localStorage.getItem(SAVE_KEY);
+        if(d) state = JSON.parse(d);
+        updateUI();
+        
+        // Firebase Listeners
+        db.ref('online/' + userId).set(true);
+        db.ref('online/' + userId).onDisconnect().remove();
+        db.ref('online').on('value', s => document.getElementById('online-count').innerText = "USERS ONLINE: " + s.numChildren());
+        
+        db.ref('chat').limitToLast(15).on('child_added', s => {
+            const m = s.val();
+            const div = document.createElement('div');
+            div.className = 'msg';
+            div.innerHTML = `<b>${m.user}:</b> ${m.text}`;
+            const container = document.getElementById('chat-messages');
+            container.appendChild(div);
+            container.scrollTop = container.scrollHeight;
+        });
+
+        db.ref('leaderboard').on('value', s => {
+            const players = Object.values(s.val() || {}).sort((a,b)=>b.val-a.val);
+            document.getElementById('leader-list').innerHTML = `<tr><th>#</th><th>ИГРОК</th><th>БАЛАНС</th></tr>` + 
+            players.slice(0, 10).map((p, i) => `<tr class="${p.nick===state.nick?'me-row':''}"><td>${i+1}</td><td>${p.nick}</td><td>$${p.val.toLocaleString()}</td></tr>`).join('');
+        });
     }
 
-    function init() {
-        load(); renderMarket(); renderBotShop(); updateLeaderboard();
-        setInterval(tick, 700);
-        setInterval(rollNews, 25000);
-        setInterval(() => { state.cash += state.passive; addXP(0.5); updateStats(); }, 1000);
-        setInterval(botLogic, 1500);
-        setInterval(save, 5000);
-        setInterval(updateOnline, 4000);
-    }
-
-    function updateOnline() {
-        const base = 1380 + Math.floor(Math.random() * 50);
-        document.getElementById('online-count').innerText = `USERS ONLINE: ${base.toLocaleString()}`;
-    }
-
-    function rollNews() {
-        const vipNews = [
-            { t: "ИЛОН МАСК: 'BTC НА ЛУНУ!' (PUMP x5)", m: 5, target: 'btc', c: 'var(--neon-green)' },
-            { t: "ВИТАЛИК БУТЕРИН УЛУЧШИЛ СЕТЬ (ETH PUMP x3)", m: 3, target: 'eth', c: 'var(--neon-green)' },
-            { t: "КРИЗИС В ЭКОНОМИКЕ (DUMP x0.2)", m: 0.2, target: 'all', c: 'var(--neon-red)' }
-        ];
-        const n = vipNews[Math.floor(Math.random()*vipNews.length)];
-        const el = document.getElementById('news-line');
-        el.innerText = `>>> ${n.t}`; el.style.color = n.c;
-        if(n.target === 'all') Object.keys(globalMods).forEach(k => globalMods[k] = n.m);
-        else globalMods[n.target] = n.m;
-        setTimeout(() => { Object.keys(globalMods).forEach(k => globalMods[k] = 1); el.style.color = '#888'; }, 12000);
+    function updateUI() {
+        document.getElementById('user-nick').innerText = state.nick;
+        document.getElementById('user-avatar').style.backgroundImage = `url('${state.avatar}')`;
+        document.getElementById('farm-info').innerText = `Доход: $${state.passive}/сек`;
+        document.getElementById('farm-cost').innerText = state.farmCost;
+        renderMarket();
+        renderBotShop();
+        checkTrophies();
     }
 
     function tick() {
         state.assets.forEach(a => {
-            let change = (Math.random() - 0.46) * 2 * a.volt;
+            let change = (Math.random() - 0.47) * 2 * a.volt;
             const card = document.getElementById(`card-${a.id}`);
+            
             if (a.price > (a.base * 25)) {
                 card.classList.add('panic-mode');
                 if (Math.random() < 0.3) { a.price /= 40; card.classList.remove('panic-mode'); }
             } else { card.classList.remove('panic-mode'); }
-            let move = (change + 0.001) * globalMods[a.id];
-            a.price *= (1 + move); a.price = Math.max(0.01, a.price);
+
+            a.price *= (1 + change);
+            a.price = Math.max(0.1, a.price);
             a.history.push(a.price); a.history.shift();
-            document.getElementById(`p-${a.id}`).innerText = a.price.toFixed(2);
-            document.getElementById(`p-${a.id}`).style.color = move >= 0 ? 'var(--neon-green)' : 'var(--neon-red)';
+            
+            const pLabel = document.getElementById(`p-${a.id}`);
+            if(pLabel) {
+                pLabel.innerText = a.price.toFixed(2);
+                pLabel.style.color = change >= 0 ? 'var(--neon-green)' : 'var(--neon-red)';
+            }
             drawChart(a);
         });
         updateStats();
     }
 
     function drawChart(a) {
-        const canvas = document.getElementById(`c-${a.id}`);
-        const ctx = canvas.getContext('2d');
-        const w = canvas.width = canvas.offsetWidth, h = canvas.height = canvas.offsetHeight;
-        let min = Math.min(...a.history) * 0.9, max = Math.max(...a.history) * 1.1;
-        ctx.clearRect(0,0,w,h); ctx.beginPath(); ctx.lineWidth = 3;
+        const cvs = document.getElementById(`c-${a.id}`);
+        if(!cvs) return;
+        const ctx = cvs.getContext('2d');
+        const w = cvs.width = cvs.offsetWidth, h = cvs.height = cvs.offsetHeight;
+        let min = Math.min(...a.history)*0.9, max = Math.max(...a.history)*1.1;
+        ctx.clearRect(0,0,w,h); ctx.beginPath(); ctx.lineWidth = 2;
         ctx.strokeStyle = a.price >= a.history[a.history.length-2] ? '#39ff14' : '#ff3131';
         a.history.forEach((v, i) => {
-            let x = (i/59)*w, y = h - ((v-min)/(max-min))*h;
+            let x = (i/39)*w, y = h - ((v-min)/(max-min))*h;
             if(i==0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
         });
         ctx.stroke();
     }
 
+    function trade(id, mode) {
+        const a = state.assets.find(x => x.id === id);
+        if(mode === 'buy' && state.cash >= a.price) { state.cash -= a.price; a.owned++; addXP(5); }
+        if(mode === 'sell' && a.owned > 0) { state.cash += a.price; a.owned--; addXP(4); }
+        document.getElementById(`h-${a.id}`).innerText = a.owned;
+    }
+
+    function buyFarm() {
+        if(state.cash >= state.farmCost) {
+            state.cash -= state.farmCost; state.passive += 40; state.farmCost *= 3;
+            updateUI();
+        }
+    }
+
+    function buyBot(id) {
+        const a = state.assets.find(x => x.id === id);
+        const price = id === 'btc' ? 5000 : id === 'eth' ? 12000 : 50000;
+        if(state.cash >= price) { state.cash -= price; a.hasBot = true; renderBotShop(); }
+    }
+
+    function botLogic() {
+        state.assets.forEach(a => {
+            if(a.hasBot && a.botOn) {
+                let avg = a.history.reduce((s,v)=>s+v,0)/40;
+                if(a.price < avg*0.93 && state.cash >= a.price) trade(a.id, 'buy');
+                if(a.price > avg*1.07 && a.owned > 0) trade(a.id, 'sell');
+            }
+        });
+    }
+
     function renderMarket() {
         document.getElementById('market').innerHTML = state.assets.map(a => `
             <div class="card" id="card-${a.id}">
-                <div class="bot-label" id="bot-tag-${a.id}" style="${(a.hasBot && a.botOn) ? 'display:block' : 'none'}">BOT ACTIVE</div>
                 <div style="display:flex; justify-content:space-between"><b>${a.name}</b><span id="p-${a.id}">0</span></div>
                 <div class="chart-box"><canvas id="c-${a.id}"></canvas></div>
-                <div class="trade-row">
+                <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
                     <small>В наличии: <span id="h-${a.id}">${a.owned}</span></small>
-                    <div class="qty-ctrl">
-                        <button class="qty-btn" onclick="changeQty('${a.id}', -1)">-</button>
-                        <div class="qty-val" id="q-${a.id}" onclick="manualQty('${a.id}')">${a.qty}</div>
-                        <button class="qty-btn" onclick="changeQty('${a.id}', 1)">+</button>
-                    </div>
                 </div>
-                <div class="btn-group">
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
                     <button class="btn-buy" onclick="trade('${a.id}', 'buy')">BUY</button>
                     <button class="btn-sell" onclick="trade('${a.id}', 'sell')">SELL</button>
                 </div>
@@ -246,114 +304,64 @@
         `).join('');
     }
 
-    function manualQty(id) {
-        let val = prompt("Сколько купить/продать?", state.assets.find(x => x.id === id).qty);
-        if(val && !isNaN(val) && val > 0) {
-            state.assets.find(x => x.id === id).qty = Math.floor(val);
-            document.getElementById(`q-${id}`).innerText = Math.floor(val);
-        }
-    }
-
-    function changeQty(id, delta) {
-        const a = state.assets.find(x => x.id === id);
-        a.qty = Math.max(1, a.qty + delta);
-        document.getElementById(`q-${id}`).innerText = a.qty;
-    }
-
-    function trade(id, mode) {
-        const a = state.assets.find(x => x.id === id);
-        let total = a.price * a.qty;
-        if (mode === 'buy' && state.cash >= total) { state.cash -= total; a.owned += a.qty; addXP(10 * a.qty); } 
-        else if (mode === 'sell' && a.owned >= a.qty) { state.cash += total; a.owned -= a.qty; addXP(8 * a.qty); }
-        document.getElementById(`h-${id}`).innerText = a.owned;
-    }
-
-    function botLogic() {
-        state.assets.forEach(a => {
-            if(a.hasBot && a.botOn) {
-                let avg = a.history.reduce((s,v)=>s+v,0)/60;
-                if(a.price < avg * 0.92 && state.cash >= a.price) { state.cash -= a.price; a.owned++; }
-                if(a.price > avg * 1.08 && a.owned > 0) { state.cash += a.price; a.owned--; }
-                document.getElementById(`h-${a.id}`).innerText = a.owned;
-            }
-        });
-    }
-
-    function toggleBot(id) {
-        const a = state.assets.find(x => x.id === id);
-        a.botOn = !a.botOn;
-        renderBotShop();
-        document.getElementById(`bot-tag-${id}`).style.display = a.botOn ? 'block' : 'none';
-    }
-
     function renderBotShop() {
-        document.getElementById('bot-shop-area').innerHTML = state.assets.map(a => `
+        document.getElementById('bot-shop-area').innerHTML = state.assets.map(a => {
+            const price = a.id === 'btc' ? 5000 : a.id === 'eth' ? 12000 : 50000;
+            return `
             <div class="shop-item">
-                <b style="color:var(--neon-green)">БОТ: ${a.name}</b><br>
-                ${!a.hasBot ? 
-                    `<button class="btn-buy" style="width:100%; margin-top:10px;" onclick="buyBot('${a.id}')">КУПИТЬ: $${botsPrices[a.id]}</button>` :
-                    `<button class="toggle-btn ${!a.botOn ? 'toggle-off' : ''}" onclick="toggleBot('${a.id}')">${a.botOn ? 'ВЫКЛЮЧИТЬ БОТА' : 'ВКЛЮЧИТЬ БОТА'}</button>`
-                }
-            </div>
-        `).join('');
+                <b>БОТ: ${a.name}</b><br>
+                ${!a.hasBot ? `<button class="btn-buy" style="width:100%; margin-top:5px;" onclick="buyBot('${a.id}')">КУПИТЬ: $${price}</button>` : 
+                `<button style="width:100%; margin-top:5px; background:#222; color:#fff;" onclick="state.assets.find(x=>x.id==='${a.id}').botOn = !state.assets.find(x=>x.id==='${a.id}').botOn; renderBotShop();">${a.botOn ? 'ВЫКЛ' : 'ВКЛ'}</button>`}
+            </div>`;
+        }).join('');
     }
 
-    function buyBot(id) {
-        const a = state.assets.find(x => x.id === id);
-        if (state.cash >= botsPrices[id]) {
-            state.cash -= botsPrices[id]; a.hasBot = true; a.botOn = true;
-            renderBotShop(); document.getElementById(`bot-tag-${id}`).style.display = 'block';
+    function checkTrophies() {
+        const net = state.cash + state.assets.reduce((s,a)=>s+(a.owned*a.price),0);
+        if(net > 1000000) state.trophies[0] = true;
+        if(net > 10000000) state.trophies[1] = true;
+        if(net > 100000000) state.trophies[2] = true;
+        if(net > 1000000000) state.trophies[3] = true;
+        
+        const trs = document.querySelectorAll('.trophy');
+        state.trophies.forEach((t, i) => { if(t) trs[i].classList.add('unlocked'); });
+    }
+
+    function sendChat() {
+        const input = document.getElementById('chat-input');
+        if(input.value) {
+            db.ref('chat').push({ user: state.nick, text: input.value });
+            input.value = '';
         }
     }
 
-    function buyFarm() {
-        if (state.cash >= state.farmCost) {
-            state.cash -= state.farmCost; state.passive += 35; state.farmLvl++; state.farmCost *= 3;
-            document.getElementById('farm-info').innerText = `Доход: $${state.passive}/сек`;
-            document.getElementById('farm-cost').innerText = state.farmCost;
-        }
-    }
-
-    function addXP(val) {
-        state.xp += val;
-        let next = 200 * Math.pow(2.5, state.lvl - 1);
-        if (state.xp >= next) { state.xp = 0; state.lvl++; state.cash += 1000 * state.lvl; }
-        document.getElementById('lvl-display').innerText = `LVL ${state.lvl}`;
-        document.getElementById('xp-fill').style.width = (state.xp / next * 100) + "%";
+    function addXP(v) {
+        state.xp += v;
+        let next = 500 * Math.pow(2, state.lvl-1);
+        if(state.xp >= next) { state.lvl++; state.xp = 0; state.cash += 5000; }
+        document.getElementById('lvl-display').innerText = "LVL " + state.lvl;
+        document.getElementById('xp-fill').style.width = (state.xp/next*100) + "%";
     }
 
     function updateStats() {
         document.getElementById('balance').innerText = state.cash.toFixed(2);
         let port = state.assets.reduce((s, a) => s + (a.owned * a.price), 0);
         document.getElementById('asset-value').innerText = port.toFixed(2);
-        updateLeaderboard();
-    }
-
-    function updateLeaderboard() {
-        const players = [
-            { n: "Elon Musk", b: 999999999 },
-            { n: "Vitalik B.", b: 5000000 },
-            { n: state.nick + " (ВЫ)", b: state.cash + state.assets.reduce((s, a) => s + (a.owned * a.price), 0), me: true }
-        ].sort((a,b) => b.b - a.b);
-        document.getElementById('leader-list').innerHTML = `<tr><th>#</th><th>ИГРОК</th><th>NET WORTH</th></tr>${players.map((p, i) => `<tr class="${p.me ? 'me-row' : ''}"><td>${i+1}</td><td>${p.n}</td><td>$${Math.floor(p.b).toLocaleString()}</td></tr>`).join('')}`;
     }
 
     function openProfile() { document.getElementById('profile-modal').style.display = 'block'; }
     function saveProfile() {
-        const n = document.getElementById('nick-input').value;
-        const i = document.getElementById('img-input').value;
-        if(n) { state.nick = n; document.getElementById('user-nick').innerText = n; }
-        if(i) { state.avatar = i; document.getElementById('user-avatar').style.backgroundImage = `url('${i}')`; }
+        state.nick = document.getElementById('nick-input').value || state.nick;
+        state.avatar = document.getElementById('img-input').value || state.avatar;
         document.getElementById('profile-modal').style.display = 'none';
-        save();
+        updateUI(); save();
     }
 
-    function toggleMusic() {
-        const m = document.getElementById('bg-music'); const b = document.getElementById('m-btn');
-        if (m.paused) { m.play(); m.volume = 0.2; b.innerText = "MUSIC: ON"; } else { m.pause(); b.innerText = "MUSIC: OFF"; }
-    }
-
-    window.onload = init;
+    load();
+    setInterval(tick, 700);
+    setInterval(() => { state.cash += state.passive; updateStats(); }, 1000);
+    setInterval(botLogic, 1500);
+    setInterval(save, 5000);
 </script>
 </body>
-        </html>
+    </html>
