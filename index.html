@@ -19,130 +19,110 @@
 
         body { font-family: 'Segoe UI', sans-serif; background-color: var(--bg); color: #fff; margin: 0; padding: 10px; display: flex; flex-direction: column; align-items: center; overflow-x: hidden; }
         
-        /* ШАПКА И ПРОФИЛЬ */
-        .profile-corner { position: fixed; top: 15px; right: 15px; display: flex; flex-direction: column; align-items: center; z-index: 100; cursor: pointer; background: rgba(8,8,18,0.95); padding: 12px; border-radius: 15px; border: 1px solid var(--neon-blue); box-shadow: 0 0 15px rgba(0,210,255,0.2); }
+        .profile-corner { position: fixed; top: 15px; right: 15px; display: flex; flex-direction: column; align-items: center; z-index: 100; cursor: pointer; background: rgba(8,8,18,0.95); padding: 12px; border-radius: 15px; border: 1px solid var(--neon-blue); }
         .avatar { width: 55px; height: 55px; background-size: cover; background-position: center; border-radius: 50%; border: 2px solid var(--neon-blue); }
         .nickname { font-size: 0.8em; color: var(--neon-blue); margin-top: 5px; font-weight: bold; }
-        .lvl-badge { background: #000; color: var(--neon-gold); padding: 2px 10px; border-radius: 20px; font-size: 0.8em; margin-top: -8px; border: 1px solid var(--neon-gold); font-weight: bold; }
+        .lvl-badge { background: #000; color: var(--neon-gold); padding: 2px 10px; border-radius: 20px; font-size: 0.8em; margin-top: -8px; border: 1px solid var(--neon-gold); }
         .xp-container { width: 80px; height: 6px; background: #222; border-radius: 10px; margin-top: 8px; overflow: hidden; }
         #xp-fill { width: 0%; height: 100%; background: var(--neon-blue); transition: 0.5s; }
 
-        .game-title { font-size: 2em; letter-spacing: 6px; color: var(--neon-blue); text-shadow: 0 0 15px var(--neon-blue); margin: 20px 0; text-transform: uppercase; }
+        .game-title { font-size: 2em; letter-spacing: 6px; color: var(--neon-blue); text-shadow: 0 0 15px var(--neon-blue); margin: 20px 0; text-transform: uppercase; text-align: center; }
         
         .main-layout { display: grid; grid-template-columns: 1fr 320px; gap: 20px; width: 100%; max-width: 1200px; }
+        .news-box { grid-column: 1 / -1; background: #050505; border: 1px solid #222; padding: 15px; border-radius: 8px; text-align: center; font-weight: bold; color: var(--neon-gold); margin-bottom: 10px; min-height: 24px; }
 
-        /* ИГРОВЫЕ ПАНЕЛИ */
-        .stat-box { background: var(--widget); border: 1px solid #1a1a2e; border-radius: 12px; padding: 15px; text-align: center; flex: 1; }
+        .stat-box { flex: 1; background: var(--widget); border: 1px solid #1a1a2e; border-radius: 12px; padding: 15px; text-align: center; }
         .val { font-size: 1.6em; font-weight: bold; font-family: monospace; }
         
-        .news-box { grid-column: 1 / -1; background: #050505; border: 1px solid #222; padding: 15px; border-radius: 8px; text-align: center; font-weight: bold; color: #888; }
-
-        .market-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
-        .card { background: var(--widget); border-radius: 15px; border: 1px solid #1a1a2e; padding: 20px; position: relative; transition: 0.3s; }
-        
+        .market-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; }
+        .card { background: var(--widget); border-radius: 15px; border: 1px solid #1a1a2e; padding: 20px; position: relative; }
         .chart-box { height: 100px; background: #000; margin: 10px 0; border-radius: 5px; }
         canvas { width: 100%; height: 100%; }
 
-        /* МАГАЗИН И ТРОФЕИ */
+        .qty-control { display: flex; align-items: center; justify-content: center; gap: 8px; margin: 12px 0; }
+        .qty-btn { background: #222; color: #fff; width: 35px; height: 35px; border-radius: 5px; border: 1px solid #444; font-size: 1.2em; cursor: pointer; }
+        .qty-input { width: 80px; background: #000; border: 1px solid var(--neon-blue); color: #fff; text-align: center; padding: 7px; border-radius: 5px; font-family: monospace; }
+
         .shop-panel { background: var(--widget); border-radius: 12px; border: 1px solid #1a1a2e; padding: 20px; }
         .shop-item { background: #000; padding: 12px; border-radius: 8px; margin-bottom: 12px; border: 1px solid #222; }
         .trophy-case { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; margin-top: 10px; }
         .trophy { width: 40px; height: 40px; background: #111; border: 1px solid #333; border-radius: 5px; display: flex; align-items: center; justify-content: center; font-size: 1.2em; filter: grayscale(1); opacity: 0.3; }
-        .trophy.unlocked { filter: grayscale(0); opacity: 1; border-color: var(--neon-gold); box-shadow: 0 0 10px rgba(255,204,0,0.3); }
+        .trophy.unlocked { filter: grayscale(0); opacity: 1; border-color: var(--neon-gold); box-shadow: 0 0 10px var(--neon-gold); }
 
-        /* ЧАТ */
-        .chat-box { background: #050505; border: 1px solid #1a1a2e; border-radius: 12px; height: 300px; display: flex; flex-direction: column; margin-top: 20px; }
+        .chat-box { background: #050505; border: 1px solid #1a1a2e; border-radius: 12px; height: 350px; display: flex; flex-direction: column; margin-top: 20px; }
         #chat-messages { flex: 1; overflow-y: auto; padding: 10px; font-size: 0.85em; }
-        .chat-input-area { display: flex; border-top: 1px solid #222; }
-        #chat-input { flex: 1; background: transparent; border: none; color: #fff; padding: 10px; outline: none; }
-        .chat-send { background: var(--neon-blue); color: #000; border: none; padding: 0 15px; cursor: pointer; font-weight: bold; }
-        .msg { margin-bottom: 5px; border-left: 2px solid var(--neon-blue); padding-left: 8px; }
-        .msg b { color: var(--neon-pink); }
-
-        /* КНОПКИ */
+        
         button { cursor: pointer; border: none; border-radius: 6px; font-weight: bold; transition: 0.2s; }
-        .btn-buy { background: var(--neon-green); color: #000; padding: 10px; }
-        .btn-sell { background: var(--neon-red); color: #fff; padding: 10px; }
+        .btn-buy { background: var(--neon-green); color: #000; padding: 12px; }
+        .btn-sell { background: var(--neon-red); color: #fff; padding: 12px; }
 
-        .panic-mode { animation: panic 0.2s infinite; border: 2px solid #f00 !important; }
-        @keyframes panic { 0%, 100% { background: var(--widget); } 50% { background: #200; } }
-
-        .leaderboard { grid-column: 1 / -1; background: var(--widget); border: 1px solid #1a1a2e; border-radius: 15px; padding: 20px; }
+        .leaderboard { grid-column: 1 / -1; background: var(--widget); border: 1px solid #1a1a2e; border-radius: 15px; padding: 20px; margin-top: 20px; }
         .leader-table { width: 100%; border-collapse: collapse; }
-        .leader-table td, .leader-table th { padding: 12px; text-align: left; border-bottom: 1px solid #111; }
-        .me-row { background: rgba(0, 210, 255, 0.1); color: var(--neon-blue); }
-
-        #profile-modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: var(--widget); border: 2px solid var(--neon-blue); padding: 25px; border-radius: 15px; z-index: 1000; width: 300px; box-shadow: 0 0 100px #000; }
-        #profile-modal input { width: 100%; background: #000; border: 1px solid #333; color: #fff; padding: 12px; margin: 10px 0; border-radius: 5px; box-sizing: border-box; }
+        
+        .music-btn { position: fixed; bottom: 15px; left: 15px; background: var(--widget); border: 1px solid var(--neon-blue); color: var(--neon-blue); padding: 10px; border-radius: 50%; width: 45px; height: 45px; z-index: 100; font-size: 1.2em; }
     </style>
 </head>
 <body>
 
-<div id="profile-modal">
-    <h3 style="color:var(--neon-blue); margin-top:0;">ПРОФИЛЬ</h3>
-    <input type="text" id="nick-input" placeholder="Ваш ник...">
-    <input type="text" id="img-input" placeholder="URL фото...">
-    <button class="btn-buy" style="width:100%" onclick="saveProfile()">СОХРАНИТЬ</button>
-</div>
+<button class="music-btn" onclick="toggleMusic()">🎵</button>
+<audio id="bg-music" loop src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3"></audio>
 
-<div class="profile-corner" onclick="openProfile()">
+<div class="profile-corner">
     <div class="avatar" id="user-avatar"></div>
     <div class="nickname" id="user-nick">...</div>
     <div class="lvl-badge" id="lvl-display">LVL 1</div>
     <div class="xp-container"><div id="xp-fill"></div></div>
 </div>
 
-<div class="game-title">Neural Arbitrage v1.5</div>
+<div class="game-title">Neural Arbitrage Online</div>
 
 <div class="main-layout">
-    <div class="stat-box">
-        <div style="font-size: 0.7em; color: #666;">БАЛАНС</div>
-        <div class="val" id="balance" style="color: var(--neon-green)">1000.00</div>
-    </div>
-    <div class="stat-box">
-        <div style="font-size: 0.7em; color: #666;">ПОРТФЕЛЬ</div>
-        <div class="val" id="asset-value" style="color: var(--neon-pink)">0.00</div>
-    </div>
+    <div class="news-box" id="news-line">ЗАГРУЗКА ДАННЫХ СЕТИ...</div>
 
-    <div class="news-box" id="news-line">>>> СИСТЕМА ИНИЦИАЛИЗИРОВАНА...</div>
+    <div style="display:flex; gap:10px; grid-column: 1 / -1;">
+        <div class="stat-box">
+            <div style="font-size: 0.7em; color: #666;">БАЛАНС</div>
+            <div class="val" id="balance" style="color: var(--neon-green)">1000.00</div>
+        </div>
+        <div class="stat-box">
+            <div style="font-size: 0.7em; color: #666;">АКТИВЫ</div>
+            <div class="val" id="asset-value" style="color: var(--neon-pink)">0.00</div>
+        </div>
+    </div>
 
     <div class="market-grid" id="market"></div>
 
     <aside>
         <div class="shop-panel">
-            <h3 style="color:var(--neon-gold); margin:0 0 15px 0;">МАГАЗИН</h3>
+            <h3 style="color:var(--neon-gold); margin:0 0 10px 0;">МАГАЗИН</h3>
             <div class="shop-item">
-                <b>ASIC МАЙНЕР</b><br>
+                <b style="color:var(--neon-gold)">ASIC МАЙНЕР</b><br>
                 <small id="farm-info">Доход: $0/сек</small>
                 <button class="btn-buy" style="width:100%; margin-top:8px;" onclick="buyFarm()">КУПИТЬ: <span id="farm-cost">2000</span></button>
             </div>
             <div id="bot-shop-area"></div>
             
-            <h4 style="color:var(--neon-pink); margin:20px 0 10px 0;">ТРОФЕИ</h4>
+            <h4 style="color:var(--neon-pink); margin:15px 0 5px 0;">ТРОФЕИ</h4>
             <div class="trophy-case" id="trophy-case">
-                <div class="trophy" title="Первый миллион">🏆</div>
-                <div class="trophy" title="Магнат">💎</div>
-                <div class="trophy" title="Крипто-король">👑</div>
-                <div class="trophy" title="Бог арбитража">🌌</div>
+                <div class="trophy">🏆</div><div class="trophy">💎</div><div class="trophy">👑</div><div class="trophy">🌌</div>
             </div>
         </div>
 
         <div class="chat-box">
+            <h4 style="text-align:center; color:var(--neon-blue); margin:10px 0;">GLOBAL CHAT</h4>
             <div id="chat-messages"></div>
-            <div class="chat-input-area">
-                <input type="text" id="chat-input" placeholder="Сообщение...">
-                <button class="chat-send" onclick="sendChat()">></button>
+            <div style="display:flex; border-top:1px solid #222;">
+                <input type="text" id="chat-input" style="flex:1; background:transparent; border:none; color:#fff; padding:10px; outline:none;" placeholder="Текст...">
+                <button onclick="sendChat()" style="background:var(--neon-blue); padding:10px 15px;">></button>
             </div>
         </div>
     </aside>
 
     <div class="leaderboard">
-        <h3 style="color:var(--neon-gold); margin:0 0 15px 0;">МИРОВОЙ РЕЙТИНГ (LIVE)</h3>
+        <h3 style="color:var(--neon-gold);">РЕЙТИНГ ТРЕЙДЕРОВ</h3>
         <table class="leader-table" id="leader-list"></table>
     </div>
 </div>
-
-<div class="online-counter" id="online-count" style="margin: 20px; color: var(--neon-blue); font-size: 0.8em;">USERS ONLINE: ...</div>
 
 <script>
     const firebaseConfig = {
@@ -157,7 +137,7 @@
 
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
-    const SAVE_KEY = 'na_ultimate_save';
+    const SAVE_KEY = 'na_v2.0_final_no_admin';
     let userId = localStorage.getItem('na_uid') || 'u' + Math.random().toString(36).substr(2, 5);
     localStorage.setItem('na_uid', userId);
 
@@ -166,81 +146,68 @@
         avatar: "https://api.dicebear.com/7.x/bottts/svg?seed=" + userId,
         passive: 0, farmCost: 2000,
         assets: [
-            { id: 'btc', name: 'BIT-PULSE', base: 100, price: 100, history: Array(40).fill(100), owned: 0, volt: 0.04, hasBot: false, botOn: true },
-            { id: 'eth', name: 'NEURO-LINK', base: 45, price: 45, history: Array(40).fill(45), owned: 0, volt: 0.03, hasBot: false, botOn: true },
-            { id: 'omega', name: 'OMEGA-SHARD', base: 500, price: 500, history: Array(40).fill(500), owned: 0, volt: 0.07, hasBot: false, botOn: true }
+            { id: 'btc', name: 'BIT-PULSE', base: 100, price: 100, history: Array(40).fill(100), owned: 0, volt: 0.04, hasBot: false },
+            { id: 'eth', name: 'NEURO-LINK', base: 45, price: 45, history: Array(40).fill(45), owned: 0, volt: 0.03, hasBot: false },
+            { id: 'omega', name: 'OMEGA-SHARD', base: 500, price: 500, history: Array(40).fill(500), owned: 0, volt: 0.07, hasBot: false }
         ],
         trophies: [false, false, false, false]
     };
 
+    const newsList = [
+        "TARAS купил контрольный пакет акций Bit-Pulse!",
+        "Аналитик TARAS предсказывает мощный рост рынка.",
+        "TARAS: 'Omega-Shard — это будущее финансов'.",
+        "Киты во главе с TARAS начали масштабную закупку.",
+        "Новости: TARAS в прямом эфире обсуждает криптовалюты."
+    ];
+
+    function toggleMusic() {
+        const m = document.getElementById('bg-music');
+        return m.paused ? m.play() : m.pause();
+    }
+
+    function updateNews() {
+        document.getElementById('news-line').innerText = ">>> " + newsList[Math.floor(Math.random()*newsList.length)];
+    }
+
+    function changeQty(id, delta) {
+        let el = document.getElementById(`qty-${id}`);
+        let val = parseInt(el.value) || 1;
+        el.value = Math.max(1, val + delta);
+    }
+
     function save() {
         localStorage.setItem(SAVE_KEY, JSON.stringify(state));
-        db.ref('leaderboard/' + userId).set({
-            nick: state.nick,
-            val: Math.floor(state.cash + state.assets.reduce((s,a)=>s+(a.owned*a.price),0)),
-            lvl: state.lvl
-        });
+        db.ref('leaderboard/' + userId).set({ nick: state.nick, val: Math.floor(state.cash + state.assets.reduce((s,a)=>s+(a.owned*a.price),0)) });
     }
 
     function load() {
         const d = localStorage.getItem(SAVE_KEY);
         if(d) state = JSON.parse(d);
         updateUI();
-        
-        // Firebase Listeners
-        db.ref('online/' + userId).set(true);
-        db.ref('online/' + userId).onDisconnect().remove();
-        db.ref('online').on('value', s => document.getElementById('online-count').innerText = "USERS ONLINE: " + s.numChildren());
-        
-        db.ref('chat').limitToLast(15).on('child_added', s => {
+        db.ref('chat').limitToLast(12).on('child_added', s => {
             const m = s.val();
             const div = document.createElement('div');
-            div.className = 'msg';
-            div.innerHTML = `<b>${m.user}:</b> ${m.text}`;
-            const container = document.getElementById('chat-messages');
-            container.appendChild(div);
-            container.scrollTop = container.scrollHeight;
+            div.style.marginBottom = "5px";
+            div.innerHTML = `<b style="color:var(--neon-blue)">${m.user}:</b> ${m.text}`;
+            document.getElementById('chat-messages').appendChild(div);
+            document.getElementById('chat-messages').scrollTop = 9999;
         });
-
         db.ref('leaderboard').on('value', s => {
             const players = Object.values(s.val() || {}).sort((a,b)=>b.val-a.val);
-            document.getElementById('leader-list').innerHTML = `<tr><th>#</th><th>ИГРОК</th><th>БАЛАНС</th></tr>` + 
-            players.slice(0, 10).map((p, i) => `<tr class="${p.nick===state.nick?'me-row':''}"><td>${i+1}</td><td>${p.nick}</td><td>$${p.val.toLocaleString()}</td></tr>`).join('');
+            document.getElementById('leader-list').innerHTML = players.slice(0, 5).map((p, i) => `<tr><td>${i+1}</td><td>${p.nick}</td><td>$${p.val.toLocaleString()}</td></tr>`).join('');
         });
-    }
-
-    function updateUI() {
-        document.getElementById('user-nick').innerText = state.nick;
-        document.getElementById('user-avatar').style.backgroundImage = `url('${state.avatar}')`;
-        document.getElementById('farm-info').innerText = `Доход: $${state.passive}/сек`;
-        document.getElementById('farm-cost').innerText = state.farmCost;
-        renderMarket();
-        renderBotShop();
-        checkTrophies();
     }
 
     function tick() {
         state.assets.forEach(a => {
-            let change = (Math.random() - 0.47) * 2 * a.volt;
-            const card = document.getElementById(`card-${a.id}`);
-            
-            if (a.price > (a.base * 25)) {
-                card.classList.add('panic-mode');
-                if (Math.random() < 0.3) { a.price /= 40; card.classList.remove('panic-mode'); }
-            } else { card.classList.remove('panic-mode'); }
-
-            a.price *= (1 + change);
+            a.price *= (1 + (Math.random() - 0.48) * 2 * a.volt);
             a.price = Math.max(0.1, a.price);
             a.history.push(a.price); a.history.shift();
-            
-            const pLabel = document.getElementById(`p-${a.id}`);
-            if(pLabel) {
-                pLabel.innerText = a.price.toFixed(2);
-                pLabel.style.color = change >= 0 ? 'var(--neon-green)' : 'var(--neon-red)';
-            }
             drawChart(a);
         });
         updateStats();
+        checkTrophies();
     }
 
     function drawChart(a) {
@@ -250,51 +217,35 @@
         const w = cvs.width = cvs.offsetWidth, h = cvs.height = cvs.offsetHeight;
         let min = Math.min(...a.history)*0.9, max = Math.max(...a.history)*1.1;
         ctx.clearRect(0,0,w,h); ctx.beginPath(); ctx.lineWidth = 2;
-        ctx.strokeStyle = a.price >= a.history[a.history.length-2] ? '#39ff14' : '#ff3131';
+        ctx.strokeStyle = a.price >= a.history[38] ? '#39ff14' : '#ff3131';
         a.history.forEach((v, i) => {
             let x = (i/39)*w, y = h - ((v-min)/(max-min))*h;
-            if(i==0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+            if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
         });
         ctx.stroke();
+        document.getElementById(`p-${a.id}`).innerText = a.price.toFixed(2);
     }
 
     function trade(id, mode) {
         const a = state.assets.find(x => x.id === id);
-        if(mode === 'buy' && state.cash >= a.price) { state.cash -= a.price; a.owned++; addXP(5); }
-        if(mode === 'sell' && a.owned > 0) { state.cash += a.price; a.owned--; addXP(4); }
+        const qty = parseInt(document.getElementById(`qty-${id}`).value) || 1;
+        if(mode === 'buy' && state.cash >= a.price * qty) { state.cash -= a.price * qty; a.owned += qty; addXP(5 * qty); }
+        if(mode === 'sell' && a.owned >= qty) { state.cash += a.price * qty; a.owned -= qty; addXP(4 * qty); }
         document.getElementById(`h-${a.id}`).innerText = a.owned;
     }
 
-    function buyFarm() {
-        if(state.cash >= state.farmCost) {
-            state.cash -= state.farmCost; state.passive += 40; state.farmCost *= 3;
-            updateUI();
-        }
-    }
-
-    function buyBot(id) {
-        const a = state.assets.find(x => x.id === id);
-        const price = id === 'btc' ? 5000 : id === 'eth' ? 12000 : 50000;
-        if(state.cash >= price) { state.cash -= price; a.hasBot = true; renderBotShop(); }
-    }
-
-    function botLogic() {
-        state.assets.forEach(a => {
-            if(a.hasBot && a.botOn) {
-                let avg = a.history.reduce((s,v)=>s+v,0)/40;
-                if(a.price < avg*0.93 && state.cash >= a.price) trade(a.id, 'buy');
-                if(a.price > avg*1.07 && a.owned > 0) trade(a.id, 'sell');
-            }
-        });
-    }
+    function buyFarm() { if(state.cash >= state.farmCost) { state.cash -= state.farmCost; state.passive += 50; state.farmCost *= 2.5; updateUI(); } }
 
     function renderMarket() {
         document.getElementById('market').innerHTML = state.assets.map(a => `
-            <div class="card" id="card-${a.id}">
+            <div class="card">
                 <div style="display:flex; justify-content:space-between"><b>${a.name}</b><span id="p-${a.id}">0</span></div>
                 <div class="chart-box"><canvas id="c-${a.id}"></canvas></div>
-                <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
-                    <small>В наличии: <span id="h-${a.id}">${a.owned}</span></small>
+                <div style="text-align:center; font-size:0.9em;">В наличии: <span id="h-${a.id}">${a.owned}</span></div>
+                <div class="qty-control">
+                    <button class="qty-btn" onclick="changeQty('${a.id}', -1)">-</button>
+                    <input type="number" id="qty-${a.id}" class="qty-input" value="1">
+                    <button class="qty-btn" onclick="changeQty('${a.id}', 1)">+</button>
                 </div>
                 <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
                     <button class="btn-buy" onclick="trade('${a.id}', 'buy')">BUY</button>
@@ -305,63 +256,58 @@
     }
 
     function renderBotShop() {
-        document.getElementById('bot-shop-area').innerHTML = state.assets.map(a => {
-            const price = a.id === 'btc' ? 5000 : a.id === 'eth' ? 12000 : 50000;
-            return `
-            <div class="shop-item">
-                <b>БОТ: ${a.name}</b><br>
-                ${!a.hasBot ? `<button class="btn-buy" style="width:100%; margin-top:5px;" onclick="buyBot('${a.id}')">КУПИТЬ: $${price}</button>` : 
-                `<button style="width:100%; margin-top:5px; background:#222; color:#fff;" onclick="state.assets.find(x=>x.id==='${a.id}').botOn = !state.assets.find(x=>x.id==='${a.id}').botOn; renderBotShop();">${a.botOn ? 'ВЫКЛ' : 'ВКЛ'}</button>`}
-            </div>`;
-        }).join('');
+        document.getElementById('bot-shop-area').innerHTML = state.assets.map(a => `
+            <div class="shop-item"><b>БОТ: ${a.name}</b><br>
+                ${!a.hasBot ? `<button class="btn-buy" style="width:100%; margin-top:5px;" onclick="buyBot('${a.id}')">КУПИТЬ: $${a.base*100}</button>` : 'СТАТУС: АКТИВЕН'}
+            </div>
+        `).join('');
     }
 
-    function checkTrophies() {
-        const net = state.cash + state.assets.reduce((s,a)=>s+(a.owned*a.price),0);
-        if(net > 1000000) state.trophies[0] = true;
-        if(net > 10000000) state.trophies[1] = true;
-        if(net > 100000000) state.trophies[2] = true;
-        if(net > 1000000000) state.trophies[3] = true;
-        
-        const trs = document.querySelectorAll('.trophy');
-        state.trophies.forEach((t, i) => { if(t) trs[i].classList.add('unlocked'); });
-    }
-
-    function sendChat() {
-        const input = document.getElementById('chat-input');
-        if(input.value) {
-            db.ref('chat').push({ user: state.nick, text: input.value });
-            input.value = '';
-        }
-    }
-
-    function addXP(v) {
-        state.xp += v;
-        let next = 500 * Math.pow(2, state.lvl-1);
-        if(state.xp >= next) { state.lvl++; state.xp = 0; state.cash += 5000; }
-        document.getElementById('lvl-display').innerText = "LVL " + state.lvl;
-        document.getElementById('xp-fill').style.width = (state.xp/next*100) + "%";
+    function buyBot(id) { 
+        const a = state.assets.find(x => x.id === id);
+        if(state.cash >= a.base*100) { state.cash -= a.base*100; a.hasBot = true; renderBotShop(); }
     }
 
     function updateStats() {
         document.getElementById('balance').innerText = state.cash.toFixed(2);
-        let port = state.assets.reduce((s, a) => s + (a.owned * a.price), 0);
-        document.getElementById('asset-value').innerText = port.toFixed(2);
+        document.getElementById('asset-value').innerText = state.assets.reduce((s, a) => s + (a.owned * a.price), 0).toFixed(2);
     }
 
-    function openProfile() { document.getElementById('profile-modal').style.display = 'block'; }
-    function saveProfile() {
-        state.nick = document.getElementById('nick-input').value || state.nick;
-        state.avatar = document.getElementById('img-input').value || state.avatar;
-        document.getElementById('profile-modal').style.display = 'none';
-        updateUI(); save();
+    function checkTrophies() {
+        let net = state.cash + state.assets.reduce((s, a) => s + (a.owned * a.price), 0);
+        if(net > 1000000) state.trophies[0] = true;
+        if(net > 10000000) state.trophies[1] = true;
+        if(net > 100000000) state.trophies[2] = true;
+        if(net > 1000000000) state.trophies[3] = true;
+        document.querySelectorAll('.trophy').forEach((t, i) => { if(state.trophies[i]) t.classList.add('unlocked'); });
+    }
+
+    function addXP(v) {
+        state.xp += v;
+        let next = 1000 * Math.pow(1.5, state.lvl-1);
+        if(state.xp >= next) { state.lvl++; state.xp = 0; }
+        document.getElementById('lvl-display').innerText = "LVL " + state.lvl;
+        document.getElementById('xp-fill').style.width = (state.xp/next*100) + "%";
+    }
+
+    function sendChat() {
+        const inp = document.getElementById('chat-input');
+        if(inp.value.trim()) { db.ref('chat').push({ user: state.nick, text: inp.value }); inp.value = ''; }
+    }
+
+    function updateUI() {
+        document.getElementById('user-nick').innerText = state.nick;
+        document.getElementById('user-avatar').style.backgroundImage = `url('${state.avatar}')`;
+        document.getElementById('farm-cost').innerText = state.farmCost.toFixed(0);
+        document.getElementById('farm-info').innerText = `Доход: $${state.passive}/сек`;
+        renderMarket(); renderBotShop();
     }
 
     load();
-    setInterval(tick, 700);
+    setInterval(tick, 1000);
     setInterval(() => { state.cash += state.passive; updateStats(); }, 1000);
-    setInterval(botLogic, 1500);
+    setInterval(updateNews, 8000);
     setInterval(save, 5000);
 </script>
 </body>
-    </html>
+        </html>
