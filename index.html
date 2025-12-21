@@ -15,113 +15,125 @@
             --neon-green: #39ff14;
             --neon-red: #ff3131;
             --neon-gold: #ffcc00;
+            --silver: #c0c0c0;
         }
 
         body { font-family: 'Segoe UI', sans-serif; background-color: var(--bg); color: #fff; margin: 0; padding: 10px; display: flex; flex-direction: column; align-items: center; overflow-x: hidden; }
         
+        /* ПРОФИЛЬ И МОДАЛКА */
         .profile-corner { position: fixed; top: 15px; right: 15px; display: flex; flex-direction: column; align-items: center; z-index: 100; cursor: pointer; background: rgba(8,8,18,0.95); padding: 12px; border-radius: 15px; border: 1px solid var(--neon-blue); }
-        .avatar { width: 55px; height: 55px; background-size: cover; background-position: center; border-radius: 50%; border: 2px solid var(--neon-blue); }
-        .nickname { font-size: 0.8em; color: var(--neon-blue); margin-top: 5px; font-weight: bold; }
-        .lvl-badge { background: #000; color: var(--neon-gold); padding: 2px 10px; border-radius: 20px; font-size: 0.8em; margin-top: -8px; border: 1px solid var(--neon-gold); }
-        .xp-container { width: 80px; height: 6px; background: #222; border-radius: 10px; margin-top: 8px; overflow: hidden; }
-        #xp-fill { width: 0%; height: 100%; background: var(--neon-blue); transition: 0.5s; }
+        .avatar { width: 50px; height: 50px; background-size: cover; background-position: center; border-radius: 50%; border: 2px solid var(--neon-blue); }
+        #modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 1000; align-items: center; justify-content: center; }
+        .modal { background: var(--widget); border: 2px solid var(--neon-blue); padding: 25px; border-radius: 20px; width: 300px; text-align: center; }
+        .modal input { width: 90%; background: #000; border: 1px solid #333; color: #fff; padding: 10px; margin: 10px 0; }
 
-        .game-title { font-size: 2em; letter-spacing: 6px; color: var(--neon-blue); text-shadow: 0 0 15px var(--neon-blue); margin: 20px 0 5px 0; text-transform: uppercase; text-align: center; }
-        .online-count { font-size: 0.9em; color: var(--neon-green); margin-bottom: 20px; text-shadow: 0 0 5px var(--neon-green); }
-        
+        .game-title { font-size: 2em; letter-spacing: 5px; color: var(--neon-blue); text-shadow: 0 0 15px var(--neon-blue); margin: 20px 0 5px 0; text-transform: uppercase; }
+        .news-box { width: 100%; max-width: 1180px; background: #050505; border: 1px solid #222; padding: 12px; border-radius: 8px; text-align: center; color: var(--neon-gold); font-weight: bold; margin-bottom: 15px; }
+
         .main-layout { display: grid; grid-template-columns: 1fr 320px; gap: 20px; width: 100%; max-width: 1200px; }
-        .news-box { grid-column: 1 / -1; background: #050505; border: 1px solid #222; padding: 15px; border-radius: 8px; text-align: center; font-weight: bold; color: var(--neon-gold); margin-bottom: 10px; min-height: 24px; }
-
-        .stat-box { flex: 1; background: var(--widget); border: 1px solid #1a1a2e; border-radius: 12px; padding: 15px; text-align: center; }
-        .val { font-size: 1.6em; font-weight: bold; font-family: monospace; }
         
-        .market-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; }
-        .card { background: var(--widget); border-radius: 15px; border: 1px solid #1a1a2e; padding: 20px; position: relative; }
-        .chart-box { height: 100px; background: #000; margin: 10px 0; border-radius: 5px; }
-        canvas { width: 100%; height: 100%; }
+        /* КАРТОЧКИ */
+        .market-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px; }
+        .card { background: var(--widget); border-radius: 15px; border: 1px solid #1a1a2e; padding: 15px; height: 320px; display: flex; flex-direction: column; justify-content: space-between; }
+        .chart-box { height: 90px; background: #000; margin: 5px 0; border-radius: 5px; }
+        
+        .qty-control { display: flex; align-items: center; justify-content: center; gap: 5px; margin: 8px 0; }
+        .qty-btn { background: #222; color: #fff; width: 30px; height: 30px; border-radius: 5px; cursor: pointer; border: 1px solid #444; }
+        .qty-input { width: 60px; background: #000; border: 1px solid var(--neon-blue); color: #fff; text-align: center; border-radius: 5px; }
 
-        .qty-control { display: flex; align-items: center; justify-content: center; gap: 8px; margin: 12px 0; }
-        .qty-btn { background: #222; color: #fff; width: 35px; height: 35px; border-radius: 5px; border: 1px solid #444; font-size: 1.2em; cursor: pointer; }
-        .qty-input { width: 80px; background: #000; border: 1px solid var(--neon-blue); color: #fff; text-align: center; padding: 7px; border-radius: 5px; font-family: monospace; }
-
-        .shop-panel { background: var(--widget); border-radius: 12px; border: 1px solid #1a1a2e; padding: 20px; }
-        .shop-item { background: #000; padding: 12px; border-radius: 8px; margin-bottom: 12px; border: 1px solid #222; }
-        .trophy-case { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; margin-top: 10px; }
-        .trophy { width: 40px; height: 40px; background: #111; border: 1px solid #333; border-radius: 5px; display: flex; align-items: center; justify-content: center; font-size: 1.2em; filter: grayscale(1); opacity: 0.3; }
-        .trophy.unlocked { filter: grayscale(0); opacity: 1; border-color: var(--neon-gold); box-shadow: 0 0 10px var(--neon-gold); }
-
-        .chat-box { background: #050505; border: 1px solid #1a1a2e; border-radius: 12px; height: 350px; display: flex; flex-direction: column; margin-top: 20px; }
+        .reward-box { background: var(--widget); border: 1px solid var(--neon-pink); border-radius: 12px; padding: 15px; margin-bottom: 15px; text-align: center; }
+        .shop-panel { background: var(--widget); border: 1px solid #1a1a2e; border-radius: 12px; padding: 20px; }
+        
+        .chat-box { background: #050505; border: 1px solid #1a1a2e; border-radius: 12px; height: 300px; display: flex; flex-direction: column; margin-top: 20px; }
         #chat-messages { flex: 1; overflow-y: auto; padding: 10px; font-size: 0.85em; }
-        
-        button { cursor: pointer; border: none; border-radius: 6px; font-weight: bold; transition: 0.2s; }
-        .btn-buy { background: var(--neon-green); color: #000; padding: 12px; }
-        .btn-sell { background: var(--neon-red); color: #fff; padding: 12px; }
 
         .leaderboard { grid-column: 1 / -1; background: var(--widget); border: 1px solid #1a1a2e; border-radius: 15px; padding: 20px; margin-top: 20px; }
-        .leader-table { width: 100%; border-collapse: collapse; }
+        .leader-table { width: 100%; border-collapse: collapse; text-align: left; }
+        .online-tag { background: rgba(57, 255, 20, 0.1); color: var(--neon-green); padding: 4px 10px; border-radius: 20px; font-size: 0.8em; border: 1px solid var(--neon-green); }
+
+        button { cursor: pointer; border: none; border-radius: 6px; font-weight: bold; }
+        .btn-buy { background: var(--neon-green); color: #000; padding: 12px; width: 100%; }
+        .btn-sell { background: var(--neon-red); color: #fff; padding: 12px; width: 100%; }
         
-        .music-btn { position: fixed; bottom: 15px; left: 15px; background: var(--widget); border: 1px solid var(--neon-blue); color: var(--neon-blue); padding: 10px; border-radius: 50%; width: 45px; height: 45px; z-index: 100; font-size: 1.2em; }
+        .btn-shop-big { background: var(--neon-blue); width: 100%; padding: 12px; margin-top: 8px; font-size: 0.9em; color: #000; }
+        .btn-bot-big { background: var(--neon-green); width: 100%; padding: 12px; margin-top: 5px; font-size: 0.9em; color: #000; }
+
+        .nick-gold { color: var(--neon-gold) !important; text-shadow: 0 0 5px var(--neon-gold); }
+        .nick-silver { color: var(--silver) !important; text-shadow: 0 0 5px var(--silver); }
     </style>
 </head>
 <body>
 
-<button class="music-btn" onclick="toggleMusic()">🎵</button>
-<audio id="bg-music" loop src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3"></audio>
+<div id="modal-overlay">
+    <div class="modal">
+        <h3 style="color:var(--neon-blue)">НАСТРОЙКИ ПРОФИЛЯ</h3>
+        <input type="text" id="edit-nick" placeholder="Никнейм">
+        <input type="text" id="edit-avatar" placeholder="URL Аватара">
+        <div id="skin-list" style="margin:10px 0;"></div>
+        <button onclick="closeModal()" style="background:var(--neon-green); width:100%; padding:10px;">СОХРАНИТЬ</button>
+    </div>
+</div>
 
-<div class="profile-corner">
+<div class="profile-corner" onclick="openModal()">
     <div class="avatar" id="user-avatar"></div>
     <div class="nickname" id="user-nick">...</div>
     <div class="lvl-badge" id="lvl-display">LVL 1</div>
-    <div class="xp-container"><div id="xp-fill"></div></div>
 </div>
 
 <div class="game-title">Neural Arbitrage Gold</div>
-<div class="online-count">ONLINE: <span id="online-val">1</span></div>
+<div class="news-box" id="news-line">>>> ЗАГРУЗКА ДАННЫХ...</div>
 
 <div class="main-layout">
-    <div class="news-box" id="news-line">ИНИЦИАЛИЗАЦИЯ СЕТИ...</div>
-
-    <div style="display:flex; gap:10px; grid-column: 1 / -1;">
-        <div class="stat-box">
-            <div style="font-size: 0.7em; color: #666;">БАЛАНС</div>
-            <div class="val" id="balance" style="color: var(--neon-green)">1000.00</div>
+    <div>
+        <div style="display:flex; gap:10px; margin-bottom:20px;">
+            <div style="flex:1; background:var(--widget); padding:15px; border-radius:12px; text-align:center;">
+                <div style="font-size:0.7em; color:#666;">БАЛАНС</div>
+                <div id="balance" style="color:var(--neon-green); font-size:1.5em; font-weight:bold;">1000.00</div>
+            </div>
+            <div style="flex:1; background:var(--widget); padding:15px; border-radius:12px; text-align:center;">
+                <div style="font-size:0.7em; color:#666;">АКТИВЫ</div>
+                <div id="asset-value" style="color:var(--neon-pink); font-size:1.5em; font-weight:bold;">0.00</div>
+            </div>
         </div>
-        <div class="stat-box">
-            <div style="font-size: 0.7em; color: #666;">АКТИВЫ</div>
-            <div class="val" id="asset-value" style="color: var(--neon-pink)">0.00</div>
-        </div>
+        <div class="market-grid" id="market"></div>
     </div>
 
-    <div class="market-grid" id="market"></div>
-
     <aside>
+        <div class="reward-box">
+            <div style="color:var(--neon-pink); font-size:0.8em;">КЕЙС (20 МИН)</div>
+            <div id="timer-reg" style="font-family:monospace; margin:5px 0;">00:00</div>
+            <button id="btn-reg" onclick="openCase('reg')" style="background:var(--neon-pink); color:#fff; width:100%; padding:10px;">ОТКРЫТЬ</button>
+        </div>
+
+        <div class="reward-box" style="border-color:var(--neon-gold)">
+            <div style="color:var(--neon-gold); font-size:0.8em;">ЕЖЕДНЕВНЫЙ ШАНС</div>
+            <div id="timer-daily" style="font-family:monospace; margin:5px 0;">00:00</div>
+            <button id="btn-daily" onclick="openCase('daily')" style="background:var(--neon-gold); color:#000; width:100%; padding:10px;">ПОЛУЧИТЬ</button>
+        </div>
+
         <div class="shop-panel">
-            <h3 style="color:var(--neon-gold); margin:0 0 10px 0;">МАГАЗИН</h3>
-            <div class="shop-item">
-                <b style="color:var(--neon-gold)">ASIC МАЙНЕР</b><br>
+            <h4 style="margin:0 0 10px 0; color:var(--neon-blue)">МАЙНИНГ & БОТЫ</h4>
+            <div style="background:#000; padding:12px; border-radius:8px; border:1px solid #222;">
                 <small id="farm-info">Доход: $0/сек</small>
-                <button class="btn-buy" style="width:100%; margin-top:8px;" onclick="buyFarm()">КУПИТЬ: <span id="farm-cost">2000</span></button>
+                <button onclick="buyFarm()" class="btn-shop-big">КУПИТЬ ASIC: <span id="farm-cost">2000</span></button>
             </div>
-            <div id="bot-shop-area"></div>
-            
-            <h4 style="color:var(--neon-pink); margin:15px 0 5px 0;">ТРОФЕИ</h4>
-            <div class="trophy-case" id="trophy-case">
-                <div class="trophy">🏆</div><div class="trophy">💎</div><div class="trophy">👑</div><div class="trophy">🌌</div>
-            </div>
+            <div id="bot-shop-area" style="margin-top:10px;"></div>
         </div>
 
         <div class="chat-box">
-            <h4 style="text-align:center; color:var(--neon-blue); margin:10px 0;">GLOBAL CHAT</h4>
             <div id="chat-messages"></div>
             <div style="display:flex; border-top:1px solid #222;">
-                <input type="text" id="chat-input" style="flex:1; background:transparent; border:none; color:#fff; padding:10px; outline:none;" placeholder="Текст...">
-                <button onclick="sendChat()" style="background:var(--neon-blue); padding:10px 15px;">></button>
+                <input type="text" id="chat-input" placeholder="Текст..." style="flex:1; background:transparent; border:none; color:#fff; padding:10px; outline:none;">
+                <button onclick="sendChat()" style="background:var(--neon-blue); padding:10px;">></button>
             </div>
         </div>
     </aside>
 
     <div class="leaderboard">
-        <h3 style="color:var(--neon-gold);">РЕЙТИНГ ТРЕЙДЕРОВ</h3>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+            <h3 style="color:var(--neon-gold); margin:0;">РЕЙТИНГ ТРЕЙДЕРОВ</h3>
+            <div class="online-tag">ONLINE: <span id="online-val">1</span></div>
+        </div>
         <table class="leader-table" id="leader-list"></table>
     </div>
 </div>
@@ -136,186 +148,192 @@
       messagingSenderId: "723001384962",
       appId: "1:723001384962:web:d1773bc000a141fc3c871b"
     };
-
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
-    const SAVE_KEY = 'na_vFinal_Gold'; 
-    let userId = localStorage.getItem('na_uid') || 'u' + Math.random().toString(36).substr(2, 5);
-    localStorage.setItem('na_uid', userId);
+    const SAVE_KEY = 'na_vFinal_Gold';
 
     let state = {
-        cash: 1000, xp: 0, lvl: 1, nick: "Trader_" + userId,
-        avatar: "https://api.dicebear.com/7.x/bottts/svg?seed=" + userId,
-        passive: 0, farmCost: 2000,
+        cash: 1000, xp: 0, lvl: 1, nick: "Trader", skin: 'default',
+        avatar: "https://api.dicebear.com/7.x/bottts/svg?seed=1",
+        passive: 0, farmCost: 2000, lastReg: 0, lastDaily: 0,
+        inventory: { goldSkin: false, silverSkin: false, neonBit: false, voidCore: false },
         assets: [
-            { id: 'btc', name: 'BIT-PULSE', base: 100, price: 100, history: Array(40).fill(100), owned: 0, volt: 0.04, hasBot: false },
-            { id: 'eth', name: 'NEURO-LINK', base: 45, price: 45, history: Array(40).fill(45), owned: 0, volt: 0.03, hasBot: false },
-            { id: 'omega', name: 'OMEGA-SHARD', base: 500, price: 500, history: Array(40).fill(500), owned: 0, volt: 0.07, hasBot: false }
-        ],
-        trophies: [false, false, false, false]
+            { id: 'btc', name: 'BIT-PULSE', base: 100, price: 100, history: Array(30).fill(100), owned: 0, volt: 0.035, hasBot: false },
+            { id: 'eth', name: 'NEURO-LINK', base: 45, price: 45, history: Array(30).fill(45), owned: 0, volt: 0.025, hasBot: false },
+            { id: 'omega', name: 'OMEGA-SHARD', base: 500, price: 500, history: Array(30).fill(500), owned: 0, volt: 0.05, hasBot: false },
+            { id: 'neon', name: 'NEON-BIT', base: 1200, price: 1200, history: Array(30).fill(1200), owned: 0, volt: 0.07, hasBot: false },
+            { id: 'void', name: 'VOID-CORE', base: 10000, price: 10000, history: Array(30).fill(10000), owned: 0, volt: 0.1, hasBot: false }
+        ]
     };
 
-    const newsList = [
-        "TARAS купил контрольный пакет акций Bit-Pulse!",
-        "Аналитик TARAS предсказывает мощный рост рынка.",
-        "TARAS: 'Omega-Shard — это будущее финансов'.",
-        "Киты во главе с TARAS начали масштабную закупку.",
-        "Новости: TARAS в прямом эфире обсуждает криптовалюты."
+    const newsStrs = [
+        "TARAS купил контрольный пакет акций Bit-Pulse!", "Илон Маск Вселенский пампит монеты!",
+        "t2z2 предсказывает рост рынка!", "Новости: Вселенский объединился с t2z2!",
+        "TARAS: 'Продавайте всё, кроме Omega-Shard!'", "t2z2 запускает новый алгоритм майнинга."
     ];
 
-    function toggleMusic() {
-        const m = document.getElementById('bg-music');
-        return m.paused ? m.play() : m.pause();
+    function seedRandom(seed) { let x = Math.sin(seed) * 10000; return x - Math.floor(x); }
+
+    function openModal() {
+        document.getElementById('modal-overlay').style.display = 'flex';
+        document.getElementById('edit-nick').value = state.nick;
+        document.getElementById('edit-avatar').value = state.avatar;
+        let h = `<button style="padding:5px; margin:2px;" onclick="state.skin='default';updateUI();">Обычный</button>`;
+        if(state.inventory.goldSkin) h += `<button style="padding:5px; margin:2px; color:gold;" onclick="state.skin='gold';updateUI();">Золото</button>`;
+        if(state.inventory.silverSkin) h += `<button style="padding:5px; margin:2px; color:silver;" onclick="state.skin='silver';updateUI();">Серебро</button>`;
+        document.getElementById('skin-list').innerHTML = h;
     }
 
-    function updateNews() {
-        document.getElementById('news-line').innerText = ">>> " + newsList[Math.floor(Math.random()*newsList.length)];
-    }
-
-    function changeQty(id, delta) {
-        let el = document.getElementById(`qty-${id}`);
-        let val = parseInt(el.value) || 1;
-        el.value = Math.max(1, val + delta);
-    }
-
-    function save() {
-        localStorage.setItem(SAVE_KEY, JSON.stringify(state));
-        db.ref('leaderboard/' + userId).set({ nick: state.nick, val: Math.floor(state.cash + state.assets.reduce((s,a)=>s+(a.owned*a.price),0)) });
-        db.ref('presence/' + userId).set(true);
-        db.ref('presence/' + userId).onDisconnect().remove();
-    }
-
-    function load() {
-        const d = localStorage.getItem(SAVE_KEY);
-        if(d) state = JSON.parse(d);
-        updateUI();
-        db.ref('presence').on('value', s => {
-            document.getElementById('online-val').innerText = Object.keys(s.val() || {}).length;
-        });
-        db.ref('chat').limitToLast(12).on('child_added', s => {
-            const m = s.val();
-            const div = document.createElement('div');
-            div.style.marginBottom = "5px";
-            div.innerHTML = `<b style="color:var(--neon-blue)">${m.user}:</b> ${m.text}`;
-            document.getElementById('chat-messages').appendChild(div);
-            document.getElementById('chat-messages').scrollTop = 9999;
-        });
-        db.ref('leaderboard').on('value', s => {
-            const players = Object.values(s.val() || {}).sort((a,b)=>b.val-a.val);
-            document.getElementById('leader-list').innerHTML = players.slice(0, 5).map((p, i) => `<tr><td>${i+1}</td><td>${p.nick}</td><td>$${p.val.toLocaleString()}</td></tr>`).join('');
-        });
+    function closeModal() {
+        state.nick = document.getElementById('edit-nick').value || state.nick;
+        state.avatar = document.getElementById('edit-avatar').value || state.avatar;
+        document.getElementById('modal-overlay').style.display = 'none';
+        updateUI(); save();
     }
 
     function tick() {
+        const time = Math.floor(Date.now() / 1000);
         state.assets.forEach(a => {
-            a.price *= (1 + (Math.random() - 0.475) * 2 * a.volt);
-            a.price = Math.max(0.1, a.price);
+            let move = seedRandom(time + a.id.length) - 0.48;
+            a.price = Math.min(a.base * 25, Math.max(0.1, a.price * (1 + move * 2 * a.volt)));
             a.history.push(a.price); a.history.shift();
             drawChart(a);
+            
+            const priceEl = document.getElementById(`p-${a.id}`);
+            const holdEl = document.getElementById(`h-${a.id}`);
+            if(priceEl) priceEl.innerText = a.price.toFixed(2);
+            if(holdEl) holdEl.innerText = a.owned;
         });
         updateStats();
-        checkTrophies();
+        updateTimers();
+    }
+
+    function updateTimers() {
+        const now = Date.now();
+        const rRem = Math.max(0, 1200000 - (now - state.lastReg));
+        const dRem = Math.max(0, 86400000 - (now - state.lastDaily));
+        document.getElementById('timer-reg').innerText = rRem > 0 ? new Date(rRem).toISOString().substr(14, 5) : "ГОТОВ!";
+        document.getElementById('btn-reg').disabled = rRem > 0;
+        document.getElementById('timer-daily').innerText = dRem > 0 ? new Date(dRem).toISOString().substr(11, 8) : "ГОТОВ!";
+        document.getElementById('btn-daily').disabled = dRem > 0;
+    }
+
+    function openCase(type) {
+        let r = Math.random() * 100; let msg = "";
+        if(type === 'reg') {
+            state.lastReg = Date.now();
+            if(r < 50) { state.cash += 1000; msg = "+$1000"; }
+            else if(r < 90) { state.assets[2].owned += 1; msg = "+1 OMEGA"; }
+            else { state.inventory.goldSkin = true; msg = "ЗОЛОТОЙ НИК!"; }
+        } else {
+            state.lastDaily = Date.now();
+            if(r < 8) { state.assets[3].owned += 1; state.inventory.neonBit = true; msg = "1 NEON-BIT!"; }
+            else if(r < 10) { state.assets[4].owned += 1; state.inventory.voidCore = true; msg = "1 VOID-CORE!"; }
+            else { state.cash += 15000; msg = "+$15000"; }
+        }
+        alert(msg); renderMarket(); renderBotShop(); save();
     }
 
     function drawChart(a) {
-        const cvs = document.getElementById(`c-${a.id}`);
-        if(!cvs) return;
-        const ctx = cvs.getContext('2d');
-        const w = cvs.width = cvs.offsetWidth, h = cvs.height = cvs.offsetHeight;
+        const cvs = document.getElementById(`c-${a.id}`); if(!cvs) return;
+        const ctx = cvs.getContext('2d'), w = cvs.width = cvs.offsetWidth, h = cvs.height = cvs.offsetHeight;
         let min = Math.min(...a.history)*0.9, max = Math.max(...a.history)*1.1;
         ctx.clearRect(0,0,w,h); ctx.beginPath(); ctx.lineWidth = 2;
-        ctx.strokeStyle = a.price >= a.history[38] ? '#39ff14' : '#ff3131';
+        ctx.strokeStyle = a.price >= a.history[a.history.length-2] ? '#39ff14' : '#ff3131';
         a.history.forEach((v, i) => {
-            let x = (i/39)*w, y = h - ((v-min)/(max-min))*h;
+            let x = (i/(a.history.length-1))*w, y = h - ((v-min)/(max-min))*h;
             if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
         });
         ctx.stroke();
-        document.getElementById(`p-${a.id}`).innerText = a.price.toFixed(2);
     }
 
     function trade(id, mode) {
         const a = state.assets.find(x => x.id === id);
-        const qty = parseInt(document.getElementById(`qty-${id}`).value) || 1;
-        const totalCost = a.price * qty;
-        if(mode === 'buy' && state.cash >= totalCost) { state.cash -= totalCost; a.owned += qty; addXP(5 * qty); }
-        if(mode === 'sell' && a.owned >= qty) { state.cash += totalCost; a.owned -= qty; addXP(4 * qty); }
-        document.getElementById(`h-${a.id}`).innerText = a.owned;
+        const q = parseInt(document.getElementById(`qty-${id}`).value) || 0;
+        if(q <= 0) return;
+        if(mode === 'buy' && state.cash >= a.price * q) { state.cash -= a.price * q; a.owned += q; }
+        if(mode === 'sell' && a.owned >= q) { state.cash += a.price * q; a.owned -= q; }
+        const hEl = document.getElementById(`h-${id}`);
+        if(hEl) hEl.innerText = a.owned;
+        updateStats(); save();
     }
 
-    function buyFarm() { if(state.cash >= state.farmCost) { state.cash -= state.farmCost; state.passive += 50; state.farmCost *= 2.5; updateUI(); } }
-
     function renderMarket() {
-        document.getElementById('market').innerHTML = state.assets.map(a => `
+        document.getElementById('market').innerHTML = state.assets.filter((a,i) => i < 3 || (i==3 && state.inventory.neonBit) || (i==4 && state.inventory.voidCore)).map(a => `
             <div class="card">
-                <div style="display:flex; justify-content:space-between"><b>${a.name}</b><span id="p-${a.id}">0</span></div>
+                <div style="display:flex; justify-content:space-between; font-size:0.9em;"><b>${a.name}</b><span id="p-${a.id}">${a.price.toFixed(2)}</span></div>
                 <div class="chart-box"><canvas id="c-${a.id}"></canvas></div>
-                <div style="text-align:center; font-size:0.9em;">В наличии: <span id="h-${a.id}">${a.owned}</span></div>
+                <div style="text-align:center; font-size:0.8em; color:#aaa; margin-top:5px;">У Вас: <span id="h-${a.id}" style="color:#fff">${a.owned}</span></div>
                 <div class="qty-control">
-                    <button class="qty-btn" onclick="changeQty('${a.id}', -1)">-</button>
-                    <input type="number" id="qty-${a.id}" class="qty-input" value="1" min="1">
-                    <button class="qty-btn" onclick="changeQty('${a.id}', 1)">+</button>
+                    <button class="qty-btn" onclick="let i=document.getElementById('qty-${a.id}');i.value=Math.max(1,parseInt(i.value)-1)">-</button>
+                    <input type="number" id="qty-${a.id}" class="qty-input" value="1">
+                    <button class="qty-btn" onclick="let i=document.getElementById('qty-${a.id}');i.value=parseInt(i.value)+1">+</button>
                 </div>
                 <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-                    <button class="btn-buy" onclick="trade('${a.id}', 'buy')">BUY</button>
-                    <button class="btn-sell" onclick="trade('${a.id}', 'sell')">SELL</button>
+                    <button class="btn-buy" onclick="trade('${a.id}','buy')">BUY</button>
+                    <button class="btn-sell" onclick="trade('${a.id}','sell')">SELL</button>
                 </div>
             </div>
         `).join('');
     }
 
     function renderBotShop() {
-        document.getElementById('bot-shop-area').innerHTML = state.assets.map(a => `
-            <div class="shop-item"><b>БОТ: ${a.name}</b><br>
-                ${!a.hasBot ? `<button class="btn-buy" style="width:100%; margin-top:5px;" onclick="buyBot('${a.id}')">КУПИТЬ: $${(a.base*100).toLocaleString()}</button>` : 'СТАТУС: АКТИВЕН'}
+        document.getElementById('bot-shop-area').innerHTML = state.assets.filter((a,i) => i < 3 || (i==3 && state.inventory.neonBit) || (i==4 && state.inventory.voidCore)).map(a => `
+            <div style="background:#000; padding:10px; border-radius:8px; margin-top:5px; border:1px solid #222;">
+                <b>BOT: ${a.name}</b><br>
+                ${!a.hasBot ? `<button onclick="buyBot('${a.id}')" class="btn-bot-big">КУПИТЬ: $${(a.base*100).toLocaleString()}</button>` : '<div style="color:var(--neon-green); margin-top:5px; font-weight:bold;">СТАТУС: АКТИВЕН</div>'}
             </div>
         `).join('');
     }
 
     function buyBot(id) { 
         const a = state.assets.find(x => x.id === id);
-        if(state.cash >= a.base*100) { state.cash -= a.base*100; a.hasBot = true; renderBotShop(); }
+        if(state.cash >= a.base*100) { state.cash -= a.base*100; a.hasBot = true; renderBotShop(); save(); }
     }
 
+    function buyFarm() { if(state.cash >= state.farmCost) { state.cash -= state.farmCost; state.passive += 50; state.farmCost *= 2.2; updateUI(); save(); } }
     function updateStats() {
         document.getElementById('balance').innerText = state.cash.toFixed(2);
-        document.getElementById('asset-value').innerText = state.assets.reduce((s, a) => s + (a.owned * a.price), 0).toFixed(2);
-    }
-
-    function checkTrophies() {
-        let net = state.cash + state.assets.reduce((s, a) => s + (a.owned * a.price), 0);
-        if(net > 1000000) state.trophies[0] = true;
-        if(net > 10000000) state.trophies[1] = true;
-        if(net > 100000000) state.trophies[2] = true;
-        if(net > 1000000000) state.trophies[3] = true;
-        document.querySelectorAll('.trophy').forEach((t, i) => { if(state.trophies[i]) t.classList.add('unlocked'); });
-    }
-
-    function addXP(v) {
-        state.xp += v;
-        let next = 1000 * Math.pow(1.5, state.lvl-1);
-        if(state.xp >= next) { state.lvl++; state.xp = 0; }
-        document.getElementById('lvl-display').innerText = "LVL " + state.lvl;
-        document.getElementById('xp-fill').style.width = (state.xp/next*100) + "%";
-    }
-
-    function sendChat() {
-        const inp = document.getElementById('chat-input');
-        if(inp.value.trim()) { db.ref('chat').push({ user: state.nick, text: inp.value }); inp.value = ''; }
+        document.getElementById('asset-value').innerText = state.assets.reduce((s,a)=>s+(a.owned*a.price),0).toFixed(2);
     }
 
     function updateUI() {
-        document.getElementById('user-nick').innerText = state.nick;
+        const n = document.getElementById('user-nick'); n.innerText = state.nick; n.className = "nickname nick-" + state.skin;
         document.getElementById('user-avatar').style.backgroundImage = `url('${state.avatar}')`;
-        document.getElementById('farm-cost').innerText = state.farmCost.toFixed(0);
+        document.getElementById('farm-cost').innerText = Math.floor(state.farmCost);
         document.getElementById('farm-info').innerText = `Доход: $${state.passive}/сек`;
         renderMarket(); renderBotShop();
     }
 
-    load();
-    setInterval(tick, 1000);
-    setInterval(() => { state.cash += state.passive; updateStats(); }, 1000);
-    setInterval(updateNews, 8000);
-    setInterval(save, 5000);
+    function save() {
+        localStorage.setItem(SAVE_KEY, JSON.stringify(state));
+        let uid = localStorage.getItem('na_uid') || 'u'+Math.random(); localStorage.setItem('na_uid', uid);
+        db.ref('leaderboard/' + uid).set({ nick: state.nick, val: Math.floor(state.cash + state.assets.reduce((s,a)=>s+(a.owned*a.price),0)) });
+        db.ref('presence/' + uid).set(true); db.ref('presence/' + uid).onDisconnect().remove();
+    }
+
+    function sendChat() {
+        const i = document.getElementById('chat-input');
+        if(i.value.trim()) { db.ref('chat').push({ u: state.nick, t: i.value }); i.value = ''; }
+    }
+
+    function load() {
+        let d = localStorage.getItem(SAVE_KEY); if(d) state = {...state, ...JSON.parse(d)};
+        updateUI();
+        db.ref('presence').on('value', s => { document.getElementById('online-val').innerText = Object.keys(s.val()||{}).length; });
+        db.ref('chat').limitToLast(10).on('child_added', s => {
+            const m = s.val(); let dv = document.createElement('div');
+            dv.innerHTML = `<b>${m.u}:</b> ${m.t}`; document.getElementById('chat-messages').appendChild(dv);
+            document.getElementById('chat-messages').scrollTop = 999;
+        });
+        db.ref('leaderboard').on('value', s => {
+            const p = Object.values(s.val()||{}).sort((a,b)=>b.val-a.val);
+            document.getElementById('leader-list').innerHTML = p.slice(0,5).map((x,i)=>`<tr><td>${i+1}. ${x.nick}</td><td>$${x.val.toLocaleString()}</td></tr>`).join('');
+        });
+    }
+
+    load(); setInterval(tick, 1000); setInterval(() => { state.cash += state.passive; updateStats(); }, 1000);
+    setInterval(() => { document.getElementById('news-line').innerText = ">>> " + newsStrs[Math.floor(Math.random()*newsStrs.length)]; }, 8000);
 </script>
 </body>
-    </html>
+            </html>
